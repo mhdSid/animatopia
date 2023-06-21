@@ -4,7 +4,7 @@
 
 This library leverages the power and capabilities of Visual Regression Testing by extending the scope to cover testing web animations and CSS transitions using Puppeteer.
 
-we aim to standardize testing web animations and CSS transitions by using visual regression testing.
+We aim to standardize testing web animations and CSS transitions by using visual regression testing.
 
 
 ## What is it capable of?
@@ -22,44 +22,44 @@ Initially, it saves all the frames of the animation as baseline images which wil
 ### Test Web Animations
 
 ```
-  const AnimaTopia = require('animatopia')
+const AnimaTopia = require('animatopia')
 	
-	const webAnimationTest = new AnimaTopia()
+const webAnimationTest = new AnimaTopia()
 	
-	await webAnimationTest.matchAnimationFrames({
-		url: 'http://localhost:3000/',
-		selector: '.heart',
-		frameRate: 60,
-		maxCaptureDuration: 3000,
-		frameDelay: 20,
-		pageScreenshotDelay: 100,
-		animationName: 'pulsate-63aed68e'
-	})
+await webAnimationTest.matchAnimationFrames({
+	url: 'http://localhost:3000/',
+	selector: '.heart',
+	frameRate: 60,
+	maxCaptureDuration: 3000,
+	frameDelay: 20,
+	pageScreenshotDelay: 100,
+	animationName: 'pulsate-63aed68e'
+})
 ```
 
 ### Declarative Testing of CSS Transitions by declaring them as Web Animations
 
 ```
-  const AnimaTopia = require('animatopia')
+const AnimaTopia = require('animatopia')
 	
-	const webAnimationTest = new AnimaTopia()
+const webAnimationTest = new AnimaTopia()
 	
-	await webAnimationTest.matchAnimationFrames({
-		url: 'http://localhost:3000/',
-		selector: '.heart',
-		frameRate: 60,
-		maxCaptureDuration: 3000,
-		frameDelay: 20,
-		pageScreenshotDelay: 100,
-    cssTransitionData: {
-      keyframes: [{offset: 0, transform: 'scale(1)'}, {offset: 1, transform: 'scale(2)'}],
-      duration: 1000,
-      easing: 'linear',
-      iterations: 1,
-      fill: '',
-      delay: 0
-    }
-	})
+await webAnimationTest.matchAnimationFrames({
+	url: 'http://localhost:3000/',
+	selector: '.heart',
+	frameRate: 60,
+	maxCaptureDuration: 3000,
+	frameDelay: 20,
+	pageScreenshotDelay: 100,
+	cssTransitionData: {
+		keyframes: [{offset: 0, transform: 'scale(1)'}, {offset: 1, transform: 'scale(2)'}],
+		duration: 1000,
+		easing: 'linear',
+		iterations: 1,
+		fill: '',
+		delay: 0
+	}
+})
 ```
 
 ### Constructor
@@ -85,3 +85,4 @@ Initially, it saves all the frames of the animation as baseline images which wil
 | cssTransitionData      |     object     |              |
 | frameImagePrefix       |     string     |              |
 
+[Web Animation Object](https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API/Using_the_Web_Animations_API
