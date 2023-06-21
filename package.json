@@ -1,11 +1,11 @@
 {
-	"name": "js-animation-test",
+	"name": "animatopia",
 	"version": "1.0.1",
 	"main": "src/index.js",
 	"author": "Mohammad \"Sippi\" Sidani",
 	"repository": {
 		"type": "git",
-		"url": "git@github.com:mhdSid/js-animation-test.git"
+		"url": "git@github.com:mhdSid/animatopia.git"
 	},
 	"license": "MIT",
 	"description": "Test web animations & CSS transitions by leveraging the power of Visual Regression Testing.",
@@ -22,7 +22,10 @@
 		"css testing",
 		"animation testing",
 		"javascript animation test",
-		"js animation test"
+		"js animation test",
+		"animation visual regression test",
+		"animation test",
+		"test animations"
 	],
 	"engines": {
 		"node": ">=14.20.1"

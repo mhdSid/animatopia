@@ -16,12 +16,17 @@ Initially, it saves all the frames of the animation as baseline images which wil
 - A great tool that detects changes and anomalies in JavaScript animations.
 - It captures frame by frame screenshots of your animation or css transition based on a frame rate and frame delay values provided as inputs.
 
-<img src="./example/web-animation/screenshots/baseLine/pulse_0_0.png" width="200" height="200"/>
-<img src="./example/web-animation/screenshots/baseLine/pulse_1_17.png" width="200" height="200"/>
-<img src="./example/web-animation/screenshots/baseLine/pulse_3_161.png" width="200" height="200"/>
-<img src="./example/web-animation/screenshots/baseLine/pulse_4_229.png" width="200" height="200"/>
-<img src="./example/web-animation/screenshots/baseLine/pulse_33_2287.png" width="200" height="200"/>
-<img src="./example/web-animation/screenshots/baseLine/pulse_43_2994.png" width="200" height="200"/>
+<img style="display: inline-block; margin: 8px;" src="./example/web-animation/screenshots/baseLine/pulse_0_0.png" width="400" height="400"/>
+<img style="display: inline-block; margin: 8px;" src="./example/web-animation/screenshots/baseLine/pulse_1_18.png" width="400" height="400"/>
+<img style="display: inline-block; margin: 8px;" src="./example/web-animation/screenshots/baseLine/pulse_2_58.png" width="400" height="400"/>
+<img style="display: inline-block; margin: 8px;" src="./example/web-animation/screenshots/baseLine/pulse_3_96.png" width="400" height="400"/>
+<img style="display: inline-block; margin: 8px;" src="./example/web-animation/screenshots/baseLine/pulse_4_140.png" width="400" height="400"/>
+<img style="display: inline-block; margin: 8px;" src="./example/web-animation/screenshots/baseLine/pulse_5_182.png" width="400" height="400"/>
+<img style="display: inline-block; margin: 8px;" src="./example/web-animation/screenshots/baseLine/pulse_6_222.png" width="400" height="400"/>
+<img style="display: inline-block; margin: 8px;" src="./example/web-animation/screenshots/baseLine/pulse_7_263.png" width="400" height="400"/>
+<img style="display: inline-block; margin: 8px;" src="./example/web-animation/screenshots/baseLine/pulse_8_302.png" width="400" height="400"/>
+<img style="display: inline-block; margin: 8px;" src="./example/web-animation/screenshots/baseLine/pulse_9_342.png" width="400" height="400"/>
+<img style="display: inline-block; margin: 8px;" src="./example/web-animation/screenshots/baseLine/pulse_10_382.png" width="400" height="400"/>
 
 ## Usage
 
