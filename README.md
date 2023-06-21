@@ -84,16 +84,16 @@ await webAnimationTest.matchAnimationFrames({
 
 ### matchAnimationFrames
 
-| Prop Name              |     Type       | Default      |
-| ---------------------- | :------------: | -----------: |
-| url                    |     string     |              |
-| selector               |     string     |              |
-| frameRate              |     number     | 60           |
-| frameDelay             |     number     | 100          |
-| pageScreenshotDelay    |     number     | 100          |
-| maxCaptureDuration     |     number     | 500          |
-| animationName          |     string     |              |
-| cssTransitionData      |     object     |              |
-| frameImagePrefix       |     string     |              |
+| Prop Name              |     Type                    | Default      |
+| ---------------------- | :-------------------------: | -----------: |
+| url                    |     string                  |              |
+| selector               |     string                  |              |
+| frameRate              |     number                  | 60           |
+| frameDelay             |     number                  | 100          |
+| pageScreenshotDelay    |     number                  | 100          |
+| maxCaptureDuration     |     number                  | 500          |
+| animationName          |     string                  |              |
+| cssTransitionData      |     Web Animation Object    |              |
+| frameImagePrefix       |     string                  |              |
 
-[Web Animation Object](https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API/Using_the_Web_Animations_API
+[Web Animation Object](https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API/Using_the_Web_Animations_API)
