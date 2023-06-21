@@ -5,12 +5,12 @@
 	
 	await puppeteerWebAnimation.matchAnimationFrames({
 		url: 'http://localhost:3000/',
-		selector: '.heart',
+		selector: '.wrapper',
 		frameRate: 60,
 		maxCaptureDuration: 3000,
-		frameDelay: 20,
+		frameDelay: 50,
 		pageScreenshotDelay: 100,
-		animationName: 'pulsate-63aed68e',
+		animationName: 'pulse',
 		// cssTransitionData: {
 		//   keyframes: [{offset: 0, transform: 'scale(1)'}, {offset: 1, transform: 'scale(2)'}],
 		//   duration: 1000,

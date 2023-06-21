@@ -7,7 +7,7 @@ async function launchPuppeteer () {
       '--font-render-hinting=none',
       '--hide-scrollbars',
       '--enable-font-antialiasing',
-      // '--disable-raf-throttling'
+      '--disable-raf-throttling'
     ]
   })
   return browser
