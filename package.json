@@ -1,0 +1,28 @@
+{
+	"name": "js-animation-test",
+	"version": "1.0.0",
+	"main": "src/index.js",
+	"author": "Mohammad \"Sippi\" Sidani",
+	"repository": {
+    "type": "git",
+    "url": "git@github.com:mhdSid/js-animation-test.git"
+  },
+	"license": "MIT",
+	"description": "Test web animations & CSS transitions by leveraging the power of Visual Regression Testing.",
+	"keywords": ["web animations", "css transitions", "web animation test", "css transition test", "visual regression testing", "puppeteer web animation", "puppeteer web animation test", "puppeteer test", "test", "css testing", "animation testing", "javascript animation test", "js animation test"],
+	"engines": {
+    "node": ">=14.20.1"
+  },
+	"maintainers": [
+    {
+      "name": "moeSidani",
+      "email": "mohdsidani@gmail.com"
+    }
+  ],
+	"dependencies": {
+		"puppeteer": "^20.7.2",
+		"pixelmatch": "^5.3.0",
+		"pngjs": "^7.0.0",
+		"sharp": "^0.32.1"
+	}
+}
