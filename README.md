@@ -16,15 +16,12 @@ Initially, it saves all the frames of the animation as baseline images which wil
 - A great tool that detects changes and anomalies in JavaScript animations.
 - It captures frame by frame screenshots of your animation or css transition based on a frame rate and frame delay values provided as inputs.
 
-
-![Alt text](./example/web-animation/screenshots/baseLine/pulse_0_0.png "pulse_0_0") {:height="300px" width="300px"}
-![Alt text](./example/web-animation/screenshots/baseLine/pulse_1_17.png "pulse_1_17") {:height="300px" width="300px"}
-![Alt text](./example/web-animation/screenshots/baseLine/pulse_3_161.png "pulse_3_161.png") {:height="300px" width="300px"}
-![Alt text](./example/web-animation/screenshots/baseLine/pulse_4_229.png "pulse_4_229") {:height="300px" width="300px"}
-![Alt text](./example/web-animation/screenshots/baseLine/pulse_33_2287.png "pulse_33_2287") {:height="300px" width="300px"}
-![Alt text](./example/web-animation/screenshots/baseLine/pulse_42_2925.png "pulse_42_2925") {:height="300px" width="300px"}
-![Alt text](./example/web-animation/screenshots/baseLine/pulse_43_2994.png "pulse_43_2994") {:height="300px" width="300px"}
-
+<img src="./example/web-animation/screenshots/baseLine/pulse_0_0.png" width="200" height="200"/>
+<img src="./example/web-animation/screenshots/baseLine/pulse_1_17.png" width="200" height="200"/>
+<img src="./example/web-animation/screenshots/baseLine/pulse_3_161.png" width="200" height="200"/>
+<img src="./example/web-animation/screenshots/baseLine/pulse_4_229.png" width="200" height="200"/>
+<img src="./example/web-animation/screenshots/baseLine/pulse_33_2287.png" width="200" height="200"/>
+<img src="./example/web-animation/screenshots/baseLine/pulse_43_2994.png" width="200" height="200"/>
 
 ## Usage
 
