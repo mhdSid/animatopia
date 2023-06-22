@@ -9,7 +9,7 @@ It allows developers and designers to ensure that animations behave as intended,
 
 ### Declarative API: 
 The library offers a declarative API that understands CSS transitions as web animations.
-Developers can define animations using familiar CSS syntax, which is then converted into web animations for testing purposes.
+Developers can define animations and CSS transitions using Web Animation Interface for testing purposes.
 This approach simplifies the testing process and aligns with existing animation development workflows.
 
 The core functionality is currently being worked on to be imported to popular game engines such as **Unity**.
@@ -41,12 +41,9 @@ The library's cross-platform compatibility ensures that animations behave consis
 ## Technical Description:
 
 ### Overview:
-The Animation Regression Testing Library is implemented as a JavaScript library that leverages the web animations API and visual regression testing techniques. It provides a declarative API that understands CSS transitions as web animations, enabling developers to define animations using familiar CSS syntax.
+The Animation Regression Testing Library is implemented as a JavaScript library that leverages the web animations API and visual regression testing techniques.
 
 ### Core Functionality:
-
-#### Web Animations Conversion: 
-The library translates CSS transitions into web animations, allowing developers to specify animations using CSS syntax while benefiting from the power and control provided by the web animations API. This conversion process ensures that animations can be tested consistently across different platforms.
 
 #### Frame Capture: 
 The library captures frames at various points during the animation, utilizing platform-specific mechanisms such as requestAnimationFrame or native APIs. The captured frames are stored for subsequent comparison and analysis.
