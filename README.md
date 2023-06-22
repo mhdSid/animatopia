@@ -29,37 +29,35 @@ Developers can automate animation tests, execute them in a controlled environmen
 ### Flexible and Extensible: 
 The library is designed with flexibility in mind, allowing developers to customize and extend its functionality to suit specific testing requirements.
 It provides hooks and callbacks for incorporating additional logic, handling animation events, and integrating with other testing frameworks or tools.
-Benefits:
+
+## Benefits:
+- It saves tons of time to visually test animations on the Web and in game engines (TO-DO).
+- A great tool that detects changes and anomalies in animations.
+- It captures frame by frame screenshots of the animation based on a frame rate and frame delay values provided as inputs.
 
 ### Improved Animation Quality: 
 By integrating the Animation Regression Testing Library into the development process, developers can catch animation-related issues early, resulting in higher-quality animations that enhance the overall user experience.
-Time and Effort Savings: Automated testing eliminates the need for manual inspection of animations, reducing the time and effort required for regression testing. Developers can focus on creating and fine-tuning animations, knowing that they will be automatically validated.
+
+### Time and Effort Savings: 
+Automated testing eliminates the need for manual inspection of animations, reducing the time and effort required for regression testing. 
+Developers can focus on creating and fine-tuning animations, knowing that they will be automatically validated.
+
+If your core product relies on smooth web transitions, then this library should be used in order to garantee that each frame is as elegant as possible.
 
 ### Cross-Platform Consistency: 
 The library's cross-platform compatibility ensures that animations behave consistently across different environments, such as web browsers, game engines, and other platforms. This consistency is crucial for delivering a cohesive user experience across multiple devices and platforms.
 
-## Technical Description:
 
-### Overview:
+## Core Functionality:
 The Animation Regression Testing Library is implemented as a JavaScript library that leverages the web animations API and visual regression testing techniques.
-
-### Core Functionality:
 
 #### Frame Capture: 
 The library captures frames at various points during the animation, utilizing platform-specific mechanisms such as requestAnimationFrame or native APIs. The captured frames are stored for subsequent comparison and analysis.
 
 #### Frame Comparison: 
 Visual regression testing is performed by comparing the captured frames with reference frames or baseline images. Various image comparison algorithms are employed to identify visual differences, including pixel-level comparisons, color thresholding, and structural similarity index measurements.
-
-
-## What is it capable of?
-If your core product relies on smooth web transitions, then this library should be used in order to garantee that each frame is as elegant as possible.
-
 Initially, it saves all the frames of the animation as baseline images which will be compared against new actual screenshots in order to check if there is a mismatch in each and every frame.
 
-- It saves tons of time to visually test animations.
-- A great tool that detects changes and anomalies in JavaScript animations.
-- It captures frame by frame screenshots of your animation or css transition based on a frame rate and frame delay values provided as inputs.
 
 <img style="display: inline-block; margin: 8px;" src="./example/web-animation/screenshots/baseLine/pulse_0_0.png" width="400" height="400"/>
 <img style="display: inline-block; margin: 8px;" src="./example/web-animation/screenshots/baseLine/pulse_1_18.png" width="400" height="400"/>
