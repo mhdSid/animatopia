@@ -1,4 +1,7 @@
 const { generateAnimationFrameTimeline, delay } = require('./frame')
+const { INTERACTION_EVENT_MAP } = require('../constants/interactionEvents')
+const { ANIMATION_TRIGGER_ERROR } = require('../constants/errorMessages')
+const { ANIMATION_TRIGGER_ACTIONS } = require('./interaction')
 
 async function captureAnimationFrames ({
   page,
@@ -8,8 +11,9 @@ async function captureAnimationFrames ({
   frameDelay,
   pageScreenshotDelay,
   baselineFolder,
-  cssTransitionData,
-  animationName
+  cssTransitionData = {},
+  animationName,
+  triggerInfo: { triggerAction, triggerSelector } = { triggerAction: null, triggerSelector: null }
 }) {
   const animationFrameTimelineList = await generateAnimationFrameTimeline({
     baselineFolder,
@@ -18,10 +22,16 @@ async function captureAnimationFrames ({
     frameDelay
   })
   const frameList = []
-  if (cssTransitionData) {
-    await playCssTransitionAsAnimation({ element, cssTransitionData })
+  let animationTriggerAction = null
+  if (triggerAction) {
+    animationTriggerAction = () => {
+      ANIMATION_TRIGGER_ACTIONS(triggerAction)(triggerSelector)
+    }
+  }
+  if (!!Object.keys(cssTransitionData).length) {
+    await playCssTransitionAsAnimation({ element, cssTransitionData, animationTriggerAction })
   } else {
-    await playAnimation({ element, animationName })
+    await playAnimation({ element, animationName, animationTriggerAction })
   }
   await pauseAnimation({ element, animationName })
   await setAnimationAtCurrentTime({ element, animationName, currentTime: 0 })
@@ -40,26 +50,47 @@ async function captureAnimationFrames ({
 
 async function playAnimation ({
   element,
-  animationName
+  animationName,
+  animationTriggerAction
 }) {
-  await element.evaluate((element, animationName) => {
+  const isPlaySuccess = await element.evaluate((element, animationName, animationTriggerAction) => {
     return new Promise(resolve => {
       const animationList = element.getAnimations()
-      if (!animationList || !animationList.length) resolve()
+      if (!animationList || !animationList.length) {
+        resolve(false)
+      }
       const animation = animationList.find(animationItem => animationItem.animationName === animationName)
       if (animation) {
-        animation.play()
+        if (animationTriggerAction) {
+          animationTriggerAction()
+        } else {
+          animation.play()
+        }
+        // Confirm that animation is playing after half of the duration time
+        setTimeout(() => {
+          if (animation.playState === 'running' && animation.currentTime > 0) {
+            resolve(true)
+          } else {
+            resolve(false)
+          }
+        }, 1)
+      } else {
+        resolve(false)
       }
-      setTimeout(() => resolve(), 0)
+      setTimeout(() => resolve(true), 0)
     })
-  }, animationName)
+  }, animationName, animationTriggerAction)
+  if (!isPlaySuccess) {
+    throw new Error(ANIMATION_TRIGGER_ERROR({ triggerSelector, triggerAction }))
+  }
 }
 
 async function playCssTransitionAsAnimation ({
   element,
-  cssTransitionData
+  cssTransitionData,
+  animationTriggerAction
 }) {
-  await element.evaluate((element, animationData) => {
+  const isPlaySuccess = await element.evaluate((element, animationData, animationTriggerAction) => {
     return new Promise(resolve => {
       const isNumeric = value => /^\d+$/.test(`${value}`)
       element.animate(animationData.keyframes, {
@@ -69,9 +100,19 @@ async function playCssTransitionAsAnimation ({
         fill: animationData.fill || 'forwards',
         easing: animationData.easing || 'ease'
       })
-      setTimeout(() => resolve(), 0)
+      // Confirm that animation is playing after half of the duration time
+      setTimeout(() => {
+        if (animation.playState === 'running' && animation.currentTime > 0) {
+          resolve(true)
+        } else {
+          resolve(false)
+        }
+      }, 1)
     })
-  }, cssTransitionData)
+  }, cssTransitionData, animationTriggerAction)
+  if (!isPlaySuccess) {
+    throw new Error(ANIMATION_TRIGGER_ERROR({ triggerSelector, triggerAction }))
+  }
 }
 
 async function pauseAnimation ({
@@ -82,13 +123,15 @@ async function pauseAnimation ({
     return new Promise(resolve => {
       const animationList = element.getAnimations()
       if (!animationList || !animationList.length) {
-        resolve()
+        resolve(false)
       }
       const animation = animationList.find(animationItem => animationItem.animationName === animationName)
       if (animation) {
         animation.pause()
+      } else {
+        resolve(false)
       }
-      setTimeout(() => resolve(), 0)
+      setTimeout(() => resolve(true), 0)
     })
   }, animationName)
 }
@@ -102,13 +145,15 @@ async function setAnimationAtCurrentTime ({
     return new Promise(resolve => {
       const animationList = element.getAnimations()
       if (!animationList || !animationList.length) {
-        resolve()
+        resolve(false)
       }
       const animation = animationList.find(animationItem => animationItem.animationName === animationName)
       if (animation) {
         animation.currentTime = currentTime
+      } else {
+        resolve(false)
       }
-      setTimeout(() => resolve(), 0)
+      setTimeout(() => resolve(true), 0)
     })
   }, animationName, currentTime)
 }
@@ -133,6 +178,8 @@ async function cancelAnimation ({
         keyframes = animation.effect.getKeyframes()
         animationTiming = animation.effect.getComputedTiming()
         animation.cancel()
+      } else {
+        resolve(false)
       }
       setTimeout(() => resolve({
         keyframes,
@@ -155,6 +202,8 @@ async function getAnimationCurrentTime ({
       const animation = animationList.find(animationItem => animationItem.animationName === animationName)
       if (animation) {
         currentTime = animation.currentTime
+      } else {
+        resolve(false)
       }
       setTimeout(() => resolve(currentTime), 0)
     })

@@ -1,9 +1,7 @@
 (async () => {
-	const AnimaTopia = require('../src/index')
-	
-	const puppeteerWebAnimation = new AnimaTopia()
-	
-	await puppeteerWebAnimation.matchAnimationFrames({
+	const { matchAnimationFrames } = require('../src')
+		
+	await matchAnimationFrames({
 		url: 'http://localhost:3000/',
 		selector: '.wrapper',
 		frameRate: 60,
