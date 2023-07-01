@@ -1,5 +1,4 @@
 const { generateAnimationFrameTimeline, delay } = require('./frame')
-const { INTERACTION_EVENT_MAP } = require('../constants/interactionEvents')
 const { ANIMATION_TRIGGER_ERROR } = require('../constants/errorMessages')
 const { ANIMATION_TRIGGER_ACTIONS } = require('./interaction')
 
