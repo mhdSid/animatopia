@@ -61,7 +61,7 @@ async function matchAnimationFrames ({
   animationName,
   cssTransitionData,
   frameImagePrefix,
-  triggerInfo = { action: null, selector: null }
+  triggerInfo = { triggerAction: null, triggerSelector: null }
 } = {}) {
   validate({
     url,

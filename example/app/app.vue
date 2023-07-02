@@ -1,15 +1,33 @@
 <template>
-  <div class="wrapper">
+  <div class="wrapper" @click="handleClick" :class="{ 'has-animation': hasAnimation }">
     <div class="pulsing-heart"></div>
   </div>
 </template>
+
+<script>
+export default {
+  name: 'example',
+  data: () => ({
+    hasAnimation: false
+  }),
+  methods: {
+    handleClick () {
+      console.log('click')
+      this.hasAnimation = !this.hasAnimation
+    }
+  }
+}
+</script>
 
 <style>
 .wrapper {
 	position: absolute;
   margin-left: 50px;
   margin-top: 50px;
-	animation:pulse 1s infinite;
+}
+
+.wrapper.has-animation {
+  animation: pulse 1s infinite;
 }
 
 .pulsing-heart { 

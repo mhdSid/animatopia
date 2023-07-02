@@ -9,6 +9,10 @@
 		frameDelay: 20,
 		pageScreenshotDelay: 100,
 		animationName: 'pulse',
+		triggerInfo: {
+			triggerAction: 'click',
+			triggerSelector: '.wrapper'
+		}
 		// cssTransitionData: {
 		//   keyframes: [{offset: 0, transform: 'scale(1)'}, {offset: 1, transform: 'scale(2)'}],
 		//   duration: 1000,

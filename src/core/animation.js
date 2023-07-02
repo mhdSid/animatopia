@@ -21,16 +21,10 @@ async function captureAnimationFrames ({
     frameDelay
   })
   const frameList = []
-  let animationTriggerAction = null
-  if (triggerAction) {
-    animationTriggerAction = () => {
-      ANIMATION_TRIGGER_ACTIONS(triggerAction)(triggerSelector)
-    }
-  }
   if (!!Object.keys(cssTransitionData).length) {
-    await playCssTransitionAsAnimation({ element, cssTransitionData, animationTriggerAction })
+    await playCssTransitionAsAnimation({ element, cssTransitionData, triggerAction, triggerSelector })
   } else {
-    await playAnimation({ element, animationName, animationTriggerAction })
+    await playAnimation({ element, animationName, triggerAction, triggerSelector })
   }
   await pauseAnimation({ element, animationName })
   await setAnimationAtCurrentTime({ element, animationName, currentTime: 0 })
@@ -50,35 +44,187 @@ async function captureAnimationFrames ({
 async function playAnimation ({
   element,
   animationName,
-  animationTriggerAction
+  triggerAction,
+  triggerSelector
 }) {
-  const isPlaySuccess = await element.evaluate((element, animationName, animationTriggerAction) => {
-    return new Promise(resolve => {
-      const animationList = element.getAnimations()
-      if (!animationList || !animationList.length) {
-        resolve(false)
-      }
-      const animation = animationList.find(animationItem => animationItem.animationName === animationName)
-      if (animation) {
-        if (animationTriggerAction) {
-          animationTriggerAction()
-        } else {
-          animation.play()
+  const isPlaySuccess = await element.evaluate((element, animationName, triggerAction, triggerSelector) => {
+    return new Promise(async resolve => {
+      const ANIMATION_TRIGGER_ACTIONS = {
+        click: selector => {
+          const event = new MouseEvent('click', {
+            view: window,
+            bubbles: true,
+            cancelable: true
+          })
+          document.querySelector(selector).dispatchEvent(event)
+        },
+        dblclick: selector => {
+          const event = new MouseEvent('dblclick', {
+            view: window,
+            bubbles: true,
+            cancelable: true
+          })
+          document.querySelector(selector).dispatchEvent(event)
+        },
+        focus: selector => {
+          document.querySelector(selector).focus()
+        },
+        blur: selector => {
+          document.querySelector(selector).blur()
+        },
+        mousedown: selector => {
+          const event = new MouseEvent('mousedown', {
+            view: window,
+            bubbles: true,
+            cancelable: true
+          })
+          document.querySelector(selector).dispatchEvent(event)
+        },
+        mouseenter: selector => {
+          const event = new MouseEvent('mouseenter', {
+            view: window,
+            bubbles: true,
+            cancelable: true
+          })
+          document.querySelector(selector).dispatchEvent(event)
+        },
+        mousemove: selector => {
+          const event = new MouseEvent('mousemove', {
+            view: window,
+            bubbles: true,
+            cancelable: true
+          })
+          document.querySelector(selector).dispatchEvent(event)
+        },
+        mouseout: selector => {
+          const event = new MouseEvent('mouseout', {
+            view: window,
+            bubbles: true,
+            cancelable: true
+          })
+          document.querySelector(selector).dispatchEvent(event)
+        },
+        mouseover: selector => {
+          const event = new MouseEvent('mouseover', {
+            view: window,
+            bubbles: true,
+            cancelable: true
+          })
+          document.querySelector(selector).dispatchEvent(event)
+        },
+        mouseup: selector => {
+          const event = new MouseEvent('mouseup', {
+            view: window,
+            bubbles: true,
+            cancelable: true
+          })
+          document.querySelector(selector).dispatchEvent(event)
+        },
+        keydown: (selector, key) => {
+          const event = new KeyboardEvent('keydown')
+          document.querySelector(selector).dispatchEvent(event, { key })
+        },
+        keypress: (selector, key) => {
+          const event = new KeyboardEvent('keypress')
+          document.querySelector(selector).dispatchEvent(event, { key })
+        },
+        keyup: (selector, key) => {
+          const event = new KeyboardEvent('keyup')
+          document.querySelector(selector).dispatchEvent(event, { key })
+        },
+        mousewheel: selector => {
+          const event = new KeyboardEvent('wheel', {
+            deltaY: 1,
+            deltaMode: 1
+          })
+          document.querySelector(selector).dispatchEvent(event)
+        },
+        pointercancel: selector => {
+          const event = new PointerEvent('pointercancel')
+          document.querySelector(selector).dispatchEvent(event)
+        },
+        pointerup: selector => {
+          const event = new PointerEvent('pointerup')
+          document.querySelector(selector).dispatchEvent(event)
+        },
+        pointerover: selector => {
+          const event = new PointerEvent('pointerover')
+          document.querySelector(selector).dispatchEvent(event)
+        },
+        pointerout: selector => {
+          const event = new PointerEvent('pointerout')
+          document.querySelector(selector).dispatchEvent(event)
+        },
+        pointermove: selector => {
+          const event = new PointerEvent('pointermove')
+          document.querySelector(selector).dispatchEvent(event)
+        },
+        pointerleave: selector => {
+          const event = new PointerEvent('pointerleave')
+          document.querySelector(selector).dispatchEvent(event)
+        },
+        pointerenter: selector => {
+          const event = new PointerEvent('pointerenter')
+          document.querySelector(selector).dispatchEvent(event)
+        },
+        pointerdown: selector => {
+          const event = new PointerEvent('pointerdown')
+          document.querySelector(selector).dispatchEvent(event)
+        },
+        touchcancel: selector => {
+          const event = new Event('touchcancel')
+          document.querySelector(selector).dispatchEvent(event)
+        },
+        touchend: selector => {
+          const event = new Event('touchend')
+          document.querySelector(selector).dispatchEvent(event)
+        },
+        touchmove: selector => {
+          const event = new Event('touchmove')
+          document.querySelector(selector).dispatchEvent(event)
+        },
+        touchstart: selector => {
+          const event = new Event('touchstart')
+          document.querySelector(selector).dispatchEvent(event)
+        },
+        scroll: selector => {
+          document.querySelector(selector).scrollLeft = 100
+          document.querySelector(selector).scrollTop = 100
         }
-        // Confirm that animation is playing after half of the duration time
-        setTimeout(() => {
-          if (animation.playState === 'running' && animation.currentTime > 0) {
-            resolve(true)
-          } else {
-            resolve(false)
-          }
-        }, 1)
-      } else {
-        resolve(false)
       }
-      setTimeout(() => resolve(true), 0)
+      const getAnimation = () => {
+        const animationList = element.getAnimations()
+        if (!animationList || !animationList.length) {
+          return null
+        }
+        const animation = animationList.find(animationItem => animationItem.animationName === animationName)
+        return animation || null
+      }
+      const checkIfAnimationPlaying = async () => {
+        return new Promise(resolve => {
+          // Confirm that animation is playing
+          setTimeout(() => {
+            const animation = getAnimation()
+            if (animation && animation.playState === 'running' && animation.currentTime > 0) {
+              resolve(true)
+            } else {
+              resolve(false)
+            }
+          }, 10)
+        })
+      }
+      if (ANIMATION_TRIGGER_ACTIONS[triggerAction]) {
+        ANIMATION_TRIGGER_ACTIONS[triggerAction](triggerSelector)
+      } else {
+        const animation = getAnimation()
+        if (animation) {
+          animation.play() 
+        }
+      }
+      const isAnimationPlaying = await checkIfAnimationPlaying()
+      resolve(isAnimationPlaying)
     })
-  }, animationName, animationTriggerAction)
+  }, animationName, triggerAction, triggerSelector)
   if (!isPlaySuccess) {
     throw new Error(ANIMATION_TRIGGER_ERROR({ triggerSelector, triggerAction }))
   }
@@ -87,12 +233,23 @@ async function playAnimation ({
 async function playCssTransitionAsAnimation ({
   element,
   cssTransitionData,
-  animationTriggerAction
+  triggerAction,
+  triggerSelector
 }) {
   const isPlaySuccess = await element.evaluate((element, animationData, animationTriggerAction) => {
     return new Promise(resolve => {
       const isNumeric = value => /^\d+$/.test(`${value}`)
+      const animationId = 'animatopia-animation'
+      const getAnimation = () => {
+        const animationList = element.getAnimations()
+        if (!animationList || !animationList.length) {
+          return null
+        }
+        const animation = animationList.find(animationItem => animationItem.animationName === animationId)
+        return animation || null
+      }
       element.animate(animationData.keyframes, {
+        id: animationId,
         duration: animationData.duration,
         delay: animationData.delay || 0,
         iterations: isNumeric(animationData.iterations) || animationData.iterations === Infinity ? animationData.iterations : 1,
@@ -101,12 +258,13 @@ async function playCssTransitionAsAnimation ({
       })
       // Confirm that animation is playing after half of the duration time
       setTimeout(() => {
+        const animation = getAnimation()
         if (animation.playState === 'running' && animation.currentTime > 0) {
           resolve(true)
         } else {
           resolve(false)
         }
-      }, 1)
+      }, 10)
     })
   }, cssTransitionData, animationTriggerAction)
   if (!isPlaySuccess) {
