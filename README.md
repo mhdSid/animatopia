@@ -99,13 +99,38 @@ await webAnimationTest.matchAnimationFrames({
 ### Declarative Testing of CSS Transitions by declaring them as Web Animations
 
 ```
-const AnimaTopia = require('animatopia')
+const { matchAnimationFrames } = require('animatopia')
 	
-const webAnimationTest = new AnimaTopia()
-	
-await webAnimationTest.matchAnimationFrames({
+// Animation that runs on page load
+await matchAnimationFrames({
 	url: 'http://localhost:3000/',
-	selector: '.heart',
+	selector: '.wrapper',
+	frameRate: 60,
+	maxCaptureDuration: 3000,
+	frameDelay: 20,
+	pageScreenshotDelay: 100,
+	animationName: 'pulse'
+})
+
+// Animation that is triggered on user interaction
+await matchAnimationFrames({
+	url: 'http://localhost:3000/',
+	selector: '.wrapper',
+	frameRate: 60,
+	maxCaptureDuration: 3000,
+	frameDelay: 20,
+	pageScreenshotDelay: 100,
+	animationName: 'pulse',
+	triggerInfo: {
+		triggerAction: 'click',
+		triggerSelector: '.wrapper'
+	}
+})
+
+// CSS transition that is transformed into animation
+await matchAnimationFrames({
+	url: 'http://localhost:3000/',
+	selector: '.wrapper',
 	frameRate: 60,
 	maxCaptureDuration: 3000,
 	frameDelay: 20,
@@ -117,31 +142,30 @@ await webAnimationTest.matchAnimationFrames({
 		iterations: 1,
 		fill: '',
 		delay: 0
+	},
+	triggerInfo: {
+		triggerAction: 'hover',
+		triggerSelector: '.wrapper'
 	}
 })
 ```
-
-### Constructor
-
-| Prop Name       |     Type       | Default                                                 |
-| --------------- | :------------: | ------------------------------------------------------: |
-| baselineFolder  |     string     |   `${process.cwd()}/web-animation/screenshots/baseLine` |
-| actualFolder    |     string     |   `${process.cwd()}/web-animation/screenshots/actual`   |
-| diffFolder      |     string     |   `${process.cwd()}/web-animation/screenshots/diff`     |
-
 
 ### matchAnimationFrames
 
 | Prop Name              |     Type                    | Default      |
 | ---------------------- | :-------------------------: | -----------: |
-| url                    |     string                  |              |
-| selector               |     string                  |              |
-| frameRate              |     number                  | 60           |
-| frameDelay             |     number                  | 100          |
-| pageScreenshotDelay    |     number                  | 100          |
-| maxCaptureDuration     |     number                  | 500          |
-| animationName          |     string                  |              |
+| baselineFolder         |     String                  |              |
+| actualFolder           |     String                  |              |
+| diffFolder             |     String                  |              |
+| url                    |     String                  |              |
+| selector               |     String                  |              |
+| frameRate              |     Number                  | 60           |
+| frameDelay             |     Number                  | 100          |
+| pageScreenshotDelay    |     Number                  | 100          |
+| maxCaptureDuration     |     Number                  | 500          |
+| animationName          |     String                  |              |
 | cssTransitionData      |     Web Animation Object    |              |
-| frameImagePrefix       |     string                  |              |
+| frameImagePrefix       |     String                  |              |
+| triggerInfo            |     Object                  |              |
 
 [Web Animation Object](https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API/Using_the_Web_Animations_API)
