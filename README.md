@@ -81,11 +81,9 @@ Initially, it saves all the frames of the animation as baseline images which wil
 ### Test Web Animations
 
 ```
-const AnimaTopia = require('animatopia')
+const { matchAnimationFrames } = require('animatopia')
 	
-const webAnimationTest = new AnimaTopia()
-	
-await webAnimationTest.matchAnimationFrames({
+await matchAnimationFrames({
 	url: 'http://localhost:3000/',
 	selector: '.heart',
 	frameRate: 60,
