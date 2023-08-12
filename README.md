@@ -83,7 +83,7 @@ await matchAnimationFrames({
 })
 ```
 
-#### <svg> animation that runs on page load
+#### SVG animation that runs on page load
 
 ```js
 const { matchAnimationFrames } = require('animatopia')
