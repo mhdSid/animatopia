@@ -50,20 +50,20 @@ Initially, it saves all the frames of the animation as baseline images which wil
 
 | Prop Name              |     Type                    | Default                       |
 | ---------------------- | :-------------------------: | ----------------------------: |
-| baselineFolder         |     String                  | cwd/screenshots/baseLine      |
-| actualFolder           |     String                  | cwd/screenshots/actual        |
-| diffFolder             |     String                  | cwd/screenshots/diff          |
-| url                    |     String                  | null                          |
-| selector               |     String                  | null                          |
-| frameRate              |     Number                  | 60                            |
-| frameDelay             |     Number                  | 100                           |
-| pageScreenshotDelay    |     Number                  | 100                           |
-| maxCaptureDuration     |     Number                  | 500                           |
-| isSvg                  |     Boolean                 | false                         |
-| animationName          |     String                  | null                          |
-| cssTransitionData      |     [Web Animation Interface](https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API/Using_the_Web_Animations_API)                        | {}                            |
-| frameImagePrefix       |     String                  | null                          |
-| triggerInfo            |     Object                  | null                          |
+| baselineFolder         |     `String`                | cwd/screenshots/baseLine      |
+| actualFolder           |     `String`                | cwd/screenshots/actual        |
+| diffFolder             |     `String`                | cwd/screenshots/diff          |
+| url                    |     `String`                | null                          |
+| selector               |     `String`                | null                          |
+| frameRate              |     `Number`                | 60                            |
+| frameDelay             |     `Number`                | 100                           |
+| pageScreenshotDelay    |     `Number`                | 100                           |
+| maxCaptureDuration     |     `Number`                | 500                           |
+| isSvg                  |     `Boolean`               | false                         |
+| animationName          |     `String`                | null                          |
+| cssTransitionData      |      [Web Animation Interface](https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API/Using_the_Web_Animations_API)                        | {}                            |
+| frameImagePrefix       |     `String`                | null                          |
+| triggerInfo            |     `Object`                | null                          |
 
 
 ## Usage
