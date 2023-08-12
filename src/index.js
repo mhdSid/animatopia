@@ -31,7 +31,8 @@ function validate ({
   selector,
   animationName,
   cssTransitionData = {},
-  triggerInfo = {}
+  triggerInfo = {},
+  isSvg
 }) {
   const { action: triggerAction } = triggerInfo
   if (triggerAction && !INTERACTION_EVENT_MAP[triggerAction.toUpperCase()]) {
@@ -43,7 +44,7 @@ function validate ({
   if (!selector) {
     throw new Error(NO_SELECTOR_ERROR)
   }
-  if (!animationName && !Object.keys(cssTransitionData).length) {
+  if (!isSvg && !animationName && !Object.keys(cssTransitionData).length) {
     throw new Error(NO_ANIMATION_ERROR)
   }
 }
@@ -61,6 +62,7 @@ async function matchAnimationFrames ({
   animationName,
   cssTransitionData,
   frameImagePrefix,
+  isSvg,
   triggerInfo = { triggerAction: null, triggerSelector: null }
 } = {}) {
   validate({
@@ -68,7 +70,8 @@ async function matchAnimationFrames ({
     selector,
     animationName,
     cssTransitionData,
-    triggerInfo
+    triggerInfo,
+    isSvg
   })
   const {
     baselineFolder: _baselineFolder,
@@ -107,7 +110,8 @@ async function matchAnimationFrames ({
       maxCaptureDuration: _maxCaptureDuration,
       frameDelay: _frameDelay,
       pageScreenshotDelay: _pageScreenshotDelay,
-      baselineFolder: _baselineFolder 
+      baselineFolder: _baselineFolder,
+      isSvg
     })
     if (Array.isArray(frameList) && frameList.length) {
       await matchFrames({

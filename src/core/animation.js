@@ -1,6 +1,5 @@
 const { generateAnimationFrameTimeline, delay } = require('./frame')
 const { ANIMATION_TRIGGER_ERROR } = require('../constants/errorMessages')
-const { ANIMATION_TRIGGER_ACTIONS } = require('./interaction')
 
 async function captureAnimationFrames ({
   page,
@@ -12,6 +11,7 @@ async function captureAnimationFrames ({
   baselineFolder,
   cssTransitionData = {},
   animationName,
+  isSvg,
   triggerInfo: { triggerAction, triggerSelector } = { triggerAction: null, triggerSelector: null }
 }) {
   const animationFrameTimelineList = await generateAnimationFrameTimeline({
@@ -24,13 +24,13 @@ async function captureAnimationFrames ({
   if (!!Object.keys(cssTransitionData).length) {
     await playCssTransitionAsAnimation({ element, cssTransitionData, triggerAction, triggerSelector })
   } else {
-    await playAnimation({ element, animationName, triggerAction, triggerSelector })
+    await playAnimation({ element, animationName, triggerAction, triggerSelector, isSvg })
   }
-  await pauseAnimation({ element, animationName })
-  await setAnimationAtCurrentTime({ element, animationName, currentTime: 0 })
+  await pauseAnimation({ element, animationName, isSvg })
+  await setAnimationAtCurrentTime({ element, animationName, currentTime: 0, isSvg })
   for (let frameIndex = 0; frameIndex < animationFrameTimelineList.length; frameIndex++) {
     const currentTime = animationFrameTimelineList[frameIndex] 
-    await setAnimationAtCurrentTime({ element, currentTime, animationName })
+    await setAnimationAtCurrentTime({ element, currentTime, animationName, isSvg })
     await delay(pageScreenshotDelay)
     const frameImageData = await page.screenshot()
     frameList.push({
@@ -45,9 +45,10 @@ async function playAnimation ({
   element,
   animationName,
   triggerAction,
-  triggerSelector
+  triggerSelector,
+  isSvg
 }) {
-  const isPlaySuccess = await element.evaluate((element, animationName, triggerAction, triggerSelector) => {
+  const isPlaySuccess = await element.evaluate((element, animationName, triggerAction, triggerSelector, isSvg) => {
     return new Promise(async resolve => {
       const ANIMATION_TRIGGER_ACTIONS = {
         click: selector => {
@@ -204,27 +205,39 @@ async function playAnimation ({
         return new Promise(resolve => {
           // Confirm that animation is playing
           setTimeout(() => {
-            const animation = getAnimation()
-            if (animation && animation.playState === 'running' && animation.currentTime > 0) {
-              resolve(true)
+            if (isSvg) {
+              if (element.getCurrentTime() > 0) {
+                resolve(true)
+              } else {
+                resolve(false)
+              }
             } else {
-              resolve(false)
+              const animation = getAnimation()
+              if (animation && animation.playState === 'running' && animation.currentTime > 0) {
+                resolve(true)
+              } else {
+                resolve(false)
+              }
             }
-          }, 10)
+          }, 15)
         })
       }
-      if (ANIMATION_TRIGGER_ACTIONS[triggerAction]) {
+      if (triggerAction && triggerSelector && ANIMATION_TRIGGER_ACTIONS[triggerAction]) {
         ANIMATION_TRIGGER_ACTIONS[triggerAction](triggerSelector)
       } else {
-        const animation = getAnimation()
-        if (animation) {
-          animation.play() 
+        if (isSvg) {
+          element.setCurrentTime(0) 
+        } else {
+          const animation = getAnimation()
+          if (animation) {
+            animation.play() 
+          }
         }
       }
       const isAnimationPlaying = await checkIfAnimationPlaying()
       resolve(isAnimationPlaying)
     })
-  }, animationName, triggerAction, triggerSelector)
+  }, animationName, triggerAction, triggerSelector, isSvg)
   if (!isPlaySuccess) {
     throw new Error(ANIMATION_TRIGGER_ERROR({ triggerSelector, triggerAction }))
   }
@@ -274,45 +287,55 @@ async function playCssTransitionAsAnimation ({
 
 async function pauseAnimation ({
   element,
-  animationName
+  animationName,
+  isSvg
 }) {
-  await element.evaluate((element, animationName) => {
+  await element.evaluate((element, animationName, isSvg) => {
     return new Promise(resolve => {
-      const animationList = element.getAnimations()
-      if (!animationList || !animationList.length) {
-        resolve(false)
-      }
-      const animation = animationList.find(animationItem => animationItem.animationName === animationName)
-      if (animation) {
-        animation.pause()
+      if (isSvg) {
+        element.pauseAnimations()
       } else {
-        resolve(false)
+        const animationList = element.getAnimations()
+        if (!animationList || !animationList.length) {
+          resolve(false)
+        }
+        const animation = animationList.find(animationItem => animationItem.animationName === animationName)
+        if (animation) {
+          animation.pause()
+        } else {
+          resolve(false)
+        }
       }
-      setTimeout(() => resolve(true), 0)
+      setTimeout(() => resolve(true), 10)
     })
-  }, animationName)
+  }, animationName, isSvg)
 }
 
 async function setAnimationAtCurrentTime ({
   element,
   currentTime,
-  animationName
+  animationName,
+  isSvg
 }) {
-  await element.evaluate((element, animationName, currentTime) => {
+  await element.evaluate((element, animationName, currentTime, isSvg) => {
     return new Promise(resolve => {
-      const animationList = element.getAnimations()
-      if (!animationList || !animationList.length) {
-        resolve(false)
-      }
-      const animation = animationList.find(animationItem => animationItem.animationName === animationName)
-      if (animation) {
-        animation.currentTime = currentTime
+      if (isSvg) {
+        element.setCurrentTime(currentTime)
       } else {
-        resolve(false)
+        const animationList = element.getAnimations()
+        if (!animationList || !animationList.length) {
+          resolve(false)
+        }
+        const animation = animationList.find(animationItem => animationItem.animationName === animationName)
+        if (animation) {
+          animation.currentTime = currentTime
+        } else {
+          resolve(false)
+        }
       }
-      setTimeout(() => resolve(true), 0)
+      setTimeout(() => resolve(true), 10)
     })
-  }, animationName, currentTime)
+  }, animationName, currentTime, isSvg)
 }
 
 async function cancelAnimation ({
