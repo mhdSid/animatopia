@@ -70,7 +70,7 @@ Initially, it saves all the frames of the animation as baseline images which wil
 
 #### Web animation that runs on page load
 
-```javaSccript
+```js
 const { matchAnimationFrames } = require('animatopia')
 await matchAnimationFrames({
    url: 'http://localhost:3000/',
@@ -85,7 +85,7 @@ await matchAnimationFrames({
 
 #### <svg> animation that runs on page load
 
-```javaSccript
+```js
 const { matchAnimationFrames } = require('animatopia')
 await matchAnimationFrames({
    url: 'http://localhost:3000/',
@@ -101,7 +101,7 @@ await matchAnimationFrames({
 
 #### Animation that is triggered on user interaction
 
-```javaSccript
+```js
 const { matchAnimationFrames } = require('animatopia')
 await matchAnimationFrames({
    url: 'http://localhost:3000/',
@@ -120,7 +120,7 @@ await matchAnimationFrames({
 
 #### CSS transition that is transformed into animation
 
-```javaSccript
+```js
 const { matchAnimationFrames } = require('animatopia')
 await matchAnimationFrames({
    url: 'http://localhost:3000/',
