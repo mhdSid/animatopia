@@ -5,6 +5,7 @@
 It is a powerful tool designed to facilitate automated testing of animations in web applications.
 It allows developers and designers to ensure that animations behave as intended, providing a seamless and visually appealing user experience.
 
+
 ## Key Features:
 
 ### Declarative API: 
@@ -21,6 +22,7 @@ By capturing and analyzing frames at various points during an animation, develop
 ### Flexible and Extensible: 
 The library is designed with flexibility in mind, allowing developers to customize and extend its functionality to suit specific testing requirements.
 It provides hooks and callbacks for incorporating additional logic, handling animation events, and integrating with other testing frameworks or tools.
+
 
 ## Benefits:
 - It saves tons of time to visually test animations on the Web and in game engines (TO-DO).
@@ -44,107 +46,12 @@ Visual regression testing is performed by comparing the captured frames with ref
 Initially, it saves all the frames of the animation as baseline images which will be compared against new actual screenshots in order to check if there is a mismatch in each and every frame.
 
 
-<img style="display: inline-block; margin: 8px;" src="./example/web-animation/screenshots/baseLine/pulse_0_0.png" width="200" height="200"/>
-<img style="display: inline-block; margin: 8px;" src="./example/web-animation/screenshots/baseLine/pulse_1_18.png" width="200" height="200"/>
-<img style="display: inline-block; margin: 8px;" src="./example/web-animation/screenshots/baseLine/pulse_2_58.png" width="200" height="200"/>
-<img style="display: inline-block; margin: 8px;" src="./example/web-animation/screenshots/baseLine/pulse_3_96.png" width="200" height="200"/>
-<img style="display: inline-block; margin: 8px;" src="./example/web-animation/screenshots/baseLine/pulse_4_140.png" width="200" height="200"/>
-<img style="display: inline-block; margin: 8px;" src="./example/web-animation/screenshots/baseLine/pulse_5_182.png" width="200" height="200"/>
-<img style="display: inline-block; margin: 8px;" src="./example/web-animation/screenshots/baseLine/pulse_6_222.png" width="200" height="200"/>
-<img style="display: inline-block; margin: 8px;" src="./example/web-animation/screenshots/baseLine/pulse_7_263.png" width="200" height="200"/>
-<img style="display: inline-block; margin: 8px;" src="./example/web-animation/screenshots/baseLine/pulse_8_302.png" width="200" height="200"/>
-<img style="display: inline-block; margin: 8px;" src="./example/web-animation/screenshots/baseLine/pulse_9_342.png" width="200" height="200"/>
-<img style="display: inline-block; margin: 8px;" src="./example/web-animation/screenshots/baseLine/pulse_10_382.png" width="200" height="200"/>
-
 ## What is still missing?
  1. Support for game engines
  2. Support for WebGl
 
-## Usage
 
-### Test Web Animations
-
-```
-const { matchAnimationFrames } = require('animatopia')
-	
-await matchAnimationFrames({
-	url: 'http://localhost:3000/',
-	selector: '.heart',
-	frameRate: 60,
-	maxCaptureDuration: 3000,
-	frameDelay: 20,
-	pageScreenshotDelay: 100,
-	animationName: 'pulsate-63aed68e'
-})
-```
-
-### Declarative Testing of CSS Transitions by declaring them as Web Animations
-
-```
-const { matchAnimationFrames } = require('animatopia')
-	
-// Animation that runs on page load
-await matchAnimationFrames({
-	url: 'http://localhost:3000/',
-	selector: '.wrapper',
-	frameRate: 60,
-	maxCaptureDuration: 3000,
-	frameDelay: 20,
-	pageScreenshotDelay: 100,
-	animationName: 'pulse'
-})
-
-// <svg> Animation that runs on page load
-await matchAnimationFrames({
-	url: 'http://localhost:3000/',
-	selector: '.wrapper',
-	frameRate: 60,
-	maxCaptureDuration: 3000,
-	frameDelay: 20,
-	pageScreenshotDelay: 100,
-	animationName: 'pulse',
-	isSvg: true
-})
-
-// Animation that is triggered on user interaction
-await matchAnimationFrames({
-	url: 'http://localhost:3000/',
-	selector: '.wrapper',
-	frameRate: 60,
-	maxCaptureDuration: 3000,
-	frameDelay: 20,
-	pageScreenshotDelay: 100,
-	animationName: 'pulse',
-	triggerInfo: {
-		triggerAction: 'click',
-		triggerSelector: '.wrapper'
-	}
-})
-
-// CSS transition that is transformed into animation
-await matchAnimationFrames({
-	url: 'http://localhost:3000/',
-	selector: '.wrapper',
-	frameRate: 60,
-	maxCaptureDuration: 3000,
-	frameDelay: 20,
-	pageScreenshotDelay: 100,
-	cssTransitionData: {
-		keyframes: [{offset: 0, transform: 'scale(1)'}, {offset: 1, transform: 'scale(2)'}],
-		duration: 1000,
-		easing: 'linear',
-		iterations: 1,
-		fill: '',
-		delay: 0
-	},
-	triggerInfo: {
-		triggerAction: 'hover',
-		triggerSelector: '.wrapper'
-	}
-})
-```
-
-### matchAnimationFrames
+## Parameters of `matchAnimationFrames`
 
 | Prop Name              |     Type                    | Default      |
 | ---------------------- | :-------------------------: | -----------: |
@@ -159,8 +66,99 @@ await matchAnimationFrames({
 | maxCaptureDuration     |     Number                  | 500          |
 | isSvg                  |     Boolean                 |              |
 | animationName          |     String                  |              |
-| cssTransitionData      |     Web Animation Object    |              |
+| cssTransitionData      |     [Web Animation Interface](https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API/Using_the_Web_Animations_API) |              |
 | frameImagePrefix       |     String                  |              |
 | triggerInfo            |     Object                  |              |
 
-[Web Animation Object](https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API/Using_the_Web_Animations_API)
+
+## Usage
+
+### Web Animation that runs on page load
+
+```javaSccript
+const { matchAnimationFrames } = require('animatopia')
+await matchAnimationFrames({
+   url: 'http://localhost:3000/',
+   selector: '.wrapper',
+   frameRate: 60,
+   maxCaptureDuration: 3000,
+   frameDelay: 20,
+   pageScreenshotDelay: 100,
+   animationName: 'pulse'
+})
+```
+
+#### <svg> Animation that runs on page load
+
+```javaSccript
+const { matchAnimationFrames } = require('animatopia')
+await matchAnimationFrames({
+   url: 'http://localhost:3000/',
+   selector: '.wrapper',
+   frameRate: 60,
+   maxCaptureDuration: 3000,
+   frameDelay: 20,
+   pageScreenshotDelay: 100,
+   animationName: 'pulse',
+   isSvg: true
+})
+```
+
+#### Animation that is triggered on user interaction
+
+```javaSccript
+const { matchAnimationFrames } = require('animatopia')
+await matchAnimationFrames({
+   url: 'http://localhost:3000/',
+   selector: '.wrapper',
+   frameRate: 60,
+   maxCaptureDuration: 3000,
+   frameDelay: 20,
+   pageScreenshotDelay: 100,
+   animationName: 'pulse',
+   triggerInfo: {
+      triggerAction: 'click',
+      triggerSelector: '.wrapper'
+   }
+})
+```
+
+#### CSS transition that is transformed into animation
+
+```javaSccript
+const { matchAnimationFrames } = require('animatopia')
+await matchAnimationFrames({
+   url: 'http://localhost:3000/',
+   selector: '.wrapper',
+   frameRate: 60,
+   maxCaptureDuration: 3000,
+   frameDelay: 20,
+   pageScreenshotDelay: 100,
+   cssTransitionData: {
+      keyframes: [{offset: 0, transform: 'scale(1)'}, {offset: 1, transform: 'scale(2)'}],
+      duration: 1000,
+      easing: 'linear',
+      iterations: 1,
+      fill: '',
+      delay: 0
+   },
+   triggerInfo: {
+      triggerAction: 'hover',
+      triggerSelector: '.wrapper'
+   }
+})
+```
+
+## Sample Frames
+
+<img style="display: inline-block; margin: 8px;" src="./example/web-animation/screenshots/baseLine/pulse_0_0.png" width="200" height="200"/>
+<img style="display: inline-block; margin: 8px;" src="./example/web-animation/screenshots/baseLine/pulse_1_18.png" width="200" height="200"/>
+<img style="display: inline-block; margin: 8px;" src="./example/web-animation/screenshots/baseLine/pulse_2_58.png" width="200" height="200"/>
+<img style="display: inline-block; margin: 8px;" src="./example/web-animation/screenshots/baseLine/pulse_3_96.png" width="200" height="200"/>
+<img style="display: inline-block; margin: 8px;" src="./example/web-animation/screenshots/baseLine/pulse_4_140.png" width="200" height="200"/>
+<img style="display: inline-block; margin: 8px;" src="./example/web-animation/screenshots/baseLine/pulse_5_182.png" width="200" height="200"/>
+<img style="display: inline-block; margin: 8px;" src="./example/web-animation/screenshots/baseLine/pulse_6_222.png" width="200" height="200"/>
+<img style="display: inline-block; margin: 8px;" src="./example/web-animation/screenshots/baseLine/pulse_7_263.png" width="200" height="200"/>
+<img style="display: inline-block; margin: 8px;" src="./example/web-animation/screenshots/baseLine/pulse_8_302.png" width="200" height="200"/>
+<img style="display: inline-block; margin: 8px;" src="./example/web-animation/screenshots/baseLine/pulse_9_342.png" width="200" height="200"/>
+<img style="display: inline-block; margin: 8px;" src="./example/web-animation/screenshots/baseLine/pulse_10_382.png" width="200" height="200"/>
