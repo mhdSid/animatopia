@@ -46,34 +46,29 @@ Visual regression testing is performed by comparing the captured frames with ref
 Initially, it saves all the frames of the animation as baseline images which will be compared against new actual screenshots in order to check if there is a mismatch in each and every frame.
 
 
-## What is still missing?
- 1. Support for game engines
- 2. Support for WebGl
-
-
 ## Parameters of `matchAnimationFrames`
 
-| Prop Name              |     Type                    | Default      |
-| ---------------------- | :-------------------------: | -----------: |
-| baselineFolder         |     String                  |              |
-| actualFolder           |     String                  |              |
-| diffFolder             |     String                  |              |
-| url                    |     String                  |              |
-| selector               |     String                  |              |
-| frameRate              |     Number                  | 60           |
-| frameDelay             |     Number                  | 100          |
-| pageScreenshotDelay    |     Number                  | 100          |
-| maxCaptureDuration     |     Number                  | 500          |
-| isSvg                  |     Boolean                 |              |
-| animationName          |     String                  |              |
-| cssTransitionData      |     [Web Animation Interface](https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API/Using_the_Web_Animations_API) |              |
-| frameImagePrefix       |     String                  |              |
-| triggerInfo            |     Object                  |              |
+| Prop Name              |     Type                    | Default                       |
+| ---------------------- | :-------------------------: | ----------------------------: |
+| baselineFolder         |     String                  | cwd/screenshots/baseLine      |
+| actualFolder           |     String                  | cwd/screenshots/actual        |
+| diffFolder             |     String                  | cwd/screenshots/diff          |
+| url                    |     String                  | null                          |
+| selector               |     String                  | null                          |
+| frameRate              |     Number                  | 60                            |
+| frameDelay             |     Number                  | 100                           |
+| pageScreenshotDelay    |     Number                  | 100                           |
+| maxCaptureDuration     |     Number                  | 500                           |
+| isSvg                  |     Boolean                 | false                         |
+| animationName          |     String                  | null                          |
+| cssTransitionData      |     [Web Animation Interface](https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API/Using_the_Web_Animations_API)                        | {}                            |
+| frameImagePrefix       |     String                  | null                          |
+| triggerInfo            |     Object                  | null                          |
 
 
 ## Usage
 
-### Web Animation that runs on page load
+#### Web animation that runs on page load
 
 ```javaSccript
 const { matchAnimationFrames } = require('animatopia')
@@ -88,7 +83,7 @@ await matchAnimationFrames({
 })
 ```
 
-#### <svg> Animation that runs on page load
+#### <svg> animation that runs on page load
 
 ```javaSccript
 const { matchAnimationFrames } = require('animatopia')
@@ -149,16 +144,21 @@ await matchAnimationFrames({
 })
 ```
 
-## Sample Frames
 
-<img style="display: inline-block; margin: 8px;" src="./example/web-animation/screenshots/baseLine/pulse_0_0.png" width="200" height="200"/>
-<img style="display: inline-block; margin: 8px;" src="./example/web-animation/screenshots/baseLine/pulse_1_18.png" width="200" height="200"/>
-<img style="display: inline-block; margin: 8px;" src="./example/web-animation/screenshots/baseLine/pulse_2_58.png" width="200" height="200"/>
-<img style="display: inline-block; margin: 8px;" src="./example/web-animation/screenshots/baseLine/pulse_3_96.png" width="200" height="200"/>
-<img style="display: inline-block; margin: 8px;" src="./example/web-animation/screenshots/baseLine/pulse_4_140.png" width="200" height="200"/>
-<img style="display: inline-block; margin: 8px;" src="./example/web-animation/screenshots/baseLine/pulse_5_182.png" width="200" height="200"/>
-<img style="display: inline-block; margin: 8px;" src="./example/web-animation/screenshots/baseLine/pulse_6_222.png" width="200" height="200"/>
-<img style="display: inline-block; margin: 8px;" src="./example/web-animation/screenshots/baseLine/pulse_7_263.png" width="200" height="200"/>
-<img style="display: inline-block; margin: 8px;" src="./example/web-animation/screenshots/baseLine/pulse_8_302.png" width="200" height="200"/>
-<img style="display: inline-block; margin: 8px;" src="./example/web-animation/screenshots/baseLine/pulse_9_342.png" width="200" height="200"/>
-<img style="display: inline-block; margin: 8px;" src="./example/web-animation/screenshots/baseLine/pulse_10_382.png" width="200" height="200"/>
+## What is still missing?
+ 1. Support for game engines
+ 2. Support for WebGl
+
+
+## Sample Frames
+<img style="display: inline-block !important; margin: 8px !important;" src="./example/web-animation/screenshots/baseLine/pulse_0_0.png" width="200" height="200"/>
+<img style="display: inline-block !important; margin: 8px !important;" src="./example/web-animation/screenshots/baseLine/pulse_1_18.png" width="200" height="200"/>
+<img style="display: inline-block !important; margin: 8px !important;" src="./example/web-animation/screenshots/baseLine/pulse_2_58.png" width="200" height="200"/>
+<img style="display: inline-block !important; margin: 8px !important;" src="./example/web-animation/screenshots/baseLine/pulse_3_96.png" width="200" height="200"/>
+<img style="display: inline-block !important; margin: 8px !important;" src="./example/web-animation/screenshots/baseLine/pulse_4_140.png" width="200" height="200"/>
+<img style="display: inline-block !important; margin: 8px !important;" src="./example/web-animation/screenshots/baseLine/pulse_5_182.png" width="200" height="200"/>
+<img style="display: inline-block !important; margin: 8px !important;" src="./example/web-animation/screenshots/baseLine/pulse_6_222.png" width="200" height="200"/>
+<img style="display: inline-block !important; margin: 8px !important;" src="./example/web-animation/screenshots/baseLine/pulse_7_263.png" width="200" height="200"/>
+<img style="display: inline-block !important; margin: 8px !important;" src="./example/web-animation/screenshots/baseLine/pulse_8_302.png" width="200" height="200"/>
+<img style="display: inline-block !important; margin: 8px !important;" src="./example/web-animation/screenshots/baseLine/pulse_9_342.png" width="200" height="200"/>
+<img style="display: inline-block !important; margin: 8px !important;" src="./example/web-animation/screenshots/baseLine/pulse_10_382.png" width="200" height="200"/>
