@@ -2,7 +2,7 @@ const puppeteer = require('puppeteer')
 
 async function launchPuppeteer () {
   const browser = await puppeteer.launch({
-    headless: true,
+    headless: 'new',
     args: [
       '--font-render-hinting=none',
       '--hide-scrollbars',
