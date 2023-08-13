@@ -27,6 +27,9 @@
 		"animation test",
 		"test animations"
 	],
+	"scripts": {
+		"eslint": "jest --config eslint.jest.config.js"
+	},
 	"engines": {
 		"node": ">=14.20.1"
 	},
@@ -41,5 +44,22 @@
 		"pngjs": "^7.0.0",
 		"puppeteer": "^18.2.0",
 		"sharp": "^0.32.1"
+	},
+	"devDependencies": {
+		"@babel/core": "^7.20.0",
+    "@babel/eslint-parser": "^7.20.0",
+    "@babel/preset-env": "^7.20.0",
+    "babel-jest": "^29.2.2",
+    "eslint-config-standard-jsx": "^11.0.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-jest": "^27.2.2",
+    "eslint-plugin-n": "^16.0.0",
+    "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-standard": "^5.0.0",
+    "eslint": "^8.47.0",
+    "jest-html-reporters": "^3.1.4",
+    "jest-runner-eslint": "^2.1.0",
+    "jest": "^29.2.2"
 	}
 }

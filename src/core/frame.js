@@ -85,7 +85,7 @@ function getFrameImageName ({
   frameIndex,
   frameCurrentTime
 }) {
-  return `${frameImagePrefix || ''}${animationName}_${frameIndex}_${frameCurrentTime}.png`    
+  return `${frameImagePrefix || ''}${animationName}_${frameIndex}_${frameCurrentTime}.png`
 }
 
 module.exports = {

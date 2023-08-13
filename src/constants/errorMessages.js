@@ -1,6 +1,6 @@
 const NO_URL_ERROR = 'A "url" must be provided!'
 
-const NO_SELECTOR_ERROR = 'A "selector" must be provided!' 
+const NO_SELECTOR_ERROR = 'A "selector" must be provided!'
 
 const NO_ANIMATION_ERROR = 'Either "animationName" or "cssTransitionData" of type Web Animation must be provided!'
 

@@ -81,7 +81,7 @@ async function matchAnimationFrames ({
     frameDelay: _frameDelay,
     pageScreenshotDelay: _pageScreenshotDelay,
     maxCaptureDuration: _maxCaptureDuration
-  } = handleDefaultValues ({
+  } = handleDefaultValues({
     baselineFolder,
     actualFolder,
     diffFolder,
@@ -117,7 +117,7 @@ async function matchAnimationFrames ({
       await matchFrames({
         frameList,
         animationName,
-        frameImagePrefix, 
+        frameImagePrefix,
         baselineFolder: _baselineFolder,
         actualFolder: _actualFolder,
         diffFolder: _diffFolder
