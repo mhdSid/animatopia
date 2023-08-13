@@ -16,6 +16,7 @@ async function captureAnimationFrames ({
 }) {
   const animationFrameTimelineList = await generateAnimationFrameTimeline({
     baselineFolder,
+    animationName,
     frameRate,
     maxCaptureDuration,
     frameDelay

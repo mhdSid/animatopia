@@ -37,12 +37,13 @@ const generateFrameTimeline = async ({
 
 async function generateAnimationFrameTimeline ({
   baselineFolder,
+  animationName,
   frameRate,
   maxCaptureDuration,
   frameDelay
 }) {
   let animationFrameTimelineList = null
-  const baselineFileList = getBaselineFileList(baselineFolder)
+  const baselineFileList = getBaselineFileList(baselineFolder, animationName)
   if (Array.isArray(baselineFileList) && baselineFileList.length) {
     animationFrameTimelineList = baselineFileList.map(item => Number(item.substring(item.lastIndexOf('_') + 1, item.indexOf('.png'))))
     animationFrameTimelineList.sort((a, b) => a - b)

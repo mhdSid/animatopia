@@ -74,10 +74,13 @@ async function matchImageSnapshot ({
   return diffPercentage === 0
 }
 
-function getBaselineFileList (baselineFolder) {
+function getBaselineFileList (baselineFolder, animationName) {
   let baselineFileList = null
   try {
     baselineFileList = fs.readdirSync(baselineFolder)
+    if (Array.isArray(baselineFileList) && baselineFileList.length) {
+      baselineFileList = baselineFileList.filter(item => item.includes(animationName))
+    }
   } catch (e) {}
   return baselineFileList
 }
