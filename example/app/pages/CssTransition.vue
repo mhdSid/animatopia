@@ -17,6 +17,10 @@ export default {
   margin-top: 50px;
 }
 
+.wrapper:hover {
+  scale: 2;
+}
+
 .pulsing-heart { 
   position: relative; 
   width: 100px; 
