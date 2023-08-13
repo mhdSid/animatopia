@@ -307,7 +307,7 @@ async function pauseAnimation ({
           resolve(false)
         }
       }
-      setTimeout(() => resolve(true), 10)
+      setTimeout(() => resolve(true), 100)
     })
   }, animationName, isSvg)
 }
@@ -334,7 +334,7 @@ async function setAnimationAtCurrentTime ({
           resolve(false)
         }
       }
-      setTimeout(() => resolve(true), 10)
+      setTimeout(() => resolve(true), 100)
     })
   }, animationName, currentTime, isSvg)
 }
