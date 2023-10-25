@@ -28,7 +28,7 @@ async function captureAnimationFrames ({
     await playAnimation({ element, animationName, triggerAction, triggerSelector, isSvg })
   }
   await pauseAnimation({ element, animationName, isSvg })
-  await setAnimationAtCurrentTime({ element, animationName, currentTime: 0, isSvg })
+  await setAnimationAtCurrentTime({ element, animationName, currentTime: 0.0, isSvg })
   for (let frameIndex = 0; frameIndex < animationFrameTimelineList.length; frameIndex++) {
     const currentTime = animationFrameTimelineList[frameIndex]
     await setAnimationAtCurrentTime({ element, currentTime, animationName, isSvg })
@@ -236,7 +236,7 @@ async function playAnimation ({
         }
       }
       const isAnimationPlaying = await checkIfAnimationPlaying()
-      resolve(isAnimationPlaying)
+      setTimeout(() => resolve(isAnimationPlaying), 1)
     })
   }, animationName, triggerAction, triggerSelector, isSvg)
   if (!isPlaySuccess) {
@@ -331,7 +331,7 @@ async function setAnimationAtCurrentTime ({
         if (animation) {
           animation.currentTime = currentTime
         } else {
-          resolve(false)
+          setTimeout(() => resolve(false), 100)
         }
       }
       setTimeout(() => resolve(true), 100)

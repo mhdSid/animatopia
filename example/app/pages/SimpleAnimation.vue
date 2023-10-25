@@ -15,15 +15,13 @@ export default {
   position: absolute;
   margin-left: 50px;
   margin-top: 50px;
-  animation: pulse 1s infinite;
+  animation: pulse 1.2s infinite;
 }
-
 .pulsing-heart { 
   position: relative; 
   width: 100px; 
   height: 90px;
 } 
-
 .pulsing-heart:before, .pulsing-heart:after { 
   position: absolute; 
   content: ""; 
@@ -36,19 +34,13 @@ export default {
   transform: rotate(-45deg);  
   transform-origin: 0 100%;
 } 
-
 .pulsing-heart:after { 
   left: 0; 
   transform: rotate(45deg); 
-  transform-origin :100% 100%;
+  transform-origin: 100% 100%;
 }
 
 @keyframes pulse {
-	50% {transform: scale(1.1)}
-  100% {transform: scale(1.5)}
-}
-
-@keyframes pulsecolor {
-  10% {background: #dd0000}
+	10% {transform: scale(1.2)}
 }
 </style>
