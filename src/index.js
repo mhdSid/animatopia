@@ -90,6 +90,7 @@ async function matchAnimationFrames ({
     pageScreenshotDelay,
     maxCaptureDuration
   })
+  let matchSuccess = false
 
   let browser = null
   try {
@@ -114,7 +115,7 @@ async function matchAnimationFrames ({
       isSvg
     })
     if (Array.isArray(frameList) && frameList.length) {
-      await matchFrames({
+      const results = await matchFrames({
         frameList,
         animationName,
         frameImagePrefix,
@@ -122,11 +123,13 @@ async function matchAnimationFrames ({
         actualFolder: _actualFolder,
         diffFolder: _diffFolder
       })
+      matchSuccess = results.every(item => item === true)
     }
   } catch (error) {
     console.error('Error occurred during animation capture:', error)
   } finally {
     await browser.close()
+    return matchSuccess
   }
 }
 

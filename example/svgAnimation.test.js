@@ -1,7 +1,7 @@
 (async () => {
 	const { matchAnimationFrames } = require('../src')
 	// <SVG> Animation that runs on page load
-	await matchAnimationFrames({
+	const success = await matchAnimationFrames({
 		url: 'http://localhost:3000/svgAnimation',
 		selector: '.svgEl',
 		animationName: 'svgAnim',

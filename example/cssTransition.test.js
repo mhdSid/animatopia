@@ -1,7 +1,7 @@
 (async () => {
 	const { matchAnimationFrames } = require('../src')
 	// CSS transition that is transformed into animation
-	await matchAnimationFrames({
+	const success = await matchAnimationFrames({
 		url: 'http://localhost:3000/cssTransition',
 		selector: '.wrapper',
 		frameRate: 60,

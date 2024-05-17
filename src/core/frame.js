@@ -65,19 +65,25 @@ async function matchFrames ({
   actualFolder,
   diffFolder
 }) {
+  const promises = []
   for (let frameIndex = 0; frameIndex < frameList.length; frameIndex++) {
-    const { frameImageData, frameCurrentTime } = frameList[frameIndex]
+    promises.push(new Promise (async (resolve) => {
+      const { frameImageData, frameCurrentTime } = frameList[frameIndex]
 
-    const imageName = getFrameImageName({ frameImagePrefix, animationName, frameIndex, frameCurrentTime })
-    const matchSuccess = await matchImageSnapshot({
-      imageData: frameImageData,
-      snapshotName: imageName,
-      baselineFolder,
-      actualFolder,
-      diffFolder
-    })
-    console.log(`Frame ${frameIndex + 1} saved: ${imageName} - Match success: ${matchSuccess}`)
+      const imageName = getFrameImageName({ frameImagePrefix, animationName, frameIndex, frameCurrentTime })
+      const matchSuccess = await matchImageSnapshot({
+        imageData: frameImageData,
+        snapshotName: imageName,
+        baselineFolder,
+        actualFolder,
+        diffFolder
+      })
+      console.log(`Frame ${frameIndex + 1} saved: ${imageName} - Match success: ${matchSuccess}`)
+      resolve(matchSuccess)
+    }))
   }
+  const results = await Promise.all(promises)
+  return results
 }
 
 function getFrameImageName ({

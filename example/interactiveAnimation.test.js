@@ -1,7 +1,7 @@
 (async () => {
 	const { matchAnimationFrames } = require('../src')
 	// Animation that is triggered on user interaction
-	await matchAnimationFrames({
+	const success = await matchAnimationFrames({
 		url: 'http://localhost:3000/interactiveAnimation',
 		selector: '.wrapper',
 		frameRate: 60,

@@ -1,7 +1,7 @@
 (async () => {
 	const { matchAnimationFrames } = require('../src')
 	// Animation that runs on page load
-	await matchAnimationFrames({
+	const success = await matchAnimationFrames({
 		url: 'http://localhost:3000/SimpleAnimation',
 		selector: '.wrapper',
 		frameRate: 60,
@@ -10,4 +10,5 @@
 		pageScreenshotDelay: 100,
 		animationName: 'pulse-70524638'
 	})
+	console.log('success: ', success)
 })()
