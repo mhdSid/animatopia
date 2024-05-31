@@ -6,6 +6,9 @@ describe('web animations', () => {
 		// CSS transition that is transformed into animation
 		const matchAnimationSuccess = await matchAnimationFrames({
 			url: 'http://localhost:3000/cssTransition',
+			baselineFolder: `${process.cwd()}/web-animation/screenshots/css/baseLine`,
+			actualFolder: `${process.cwd()}/web-animation/screenshots/css/actual`,
+			diffFolder: `${process.cwd()}/web-animation/screenshots/css/diff`,
 			selector: '.wrapper',
 			frameRate: 60,
 			maxCaptureDuration: 3000,
