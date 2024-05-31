@@ -20,7 +20,7 @@ export default {
 .pulsing-heart { 
   position: relative; 
   width: 100px; 
-  height: 90px;
+  height: 91px;
 } 
 .pulsing-heart:before, .pulsing-heart:after { 
   position: absolute; 
