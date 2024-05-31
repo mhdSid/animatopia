@@ -113,7 +113,7 @@ async function playAnimation ({
         if (!animationList || !animationList.length) {
           return null
         }
-        const animation = animationList.find(animationItem => animationItem.animationName === animationName)
+        const animation = animationList.find(({ animationName: name, id }) => [name, id].includes(animationName))
         return animation || null
       }
       const checkIfAnimationPlaying = async () => {
@@ -210,7 +210,7 @@ async function pauseAnimation ({
         if (!animationList || !animationList.length) {
           resolve(false)
         }
-        const animation = animationList.find(animationItem => animationItem.animationName === animationName || animationItem.id === animationName)
+        const animation = animationList.find(({ animationName: name, id }) => [name, id].includes(animationName))
         if (animation) {
           animation.pause()
         } else {
@@ -237,7 +237,7 @@ async function setAnimationAtCurrentTime ({
         if (!animationList || !animationList.length) {
           resolve(false)
         }
-        const animation = animationList.find(animationItem => animationItem.animationName === animationName || animationItem.id === animationName)
+        const animation = animationList.find(({ animationName: name, id }) => [name, id].includes(animationName))
         if (animation) {
           animation.currentTime = currentTime
         } else {
@@ -264,7 +264,7 @@ async function cancelAnimation ({
           animationTiming
         })
       }
-      const animation = animationList.find(animationItem => animationItem.animationName === animationName || animationItem.id === animationName)
+      const animation = animationList.find(({ animationName: name, id }) => [name, id].includes(animationName))
       if (animation) {
         keyframes = animation.effect.getKeyframes()
         animationTiming = animation.effect.getComputedTiming()
@@ -290,7 +290,7 @@ async function getAnimationCurrentTime ({
       let currentTime = null
       const animationList = element.getAnimations()
       if (!animationList || !animationList.length) resolve(currentTime)
-      const animation = animationList.find(animationItem => animationItem.animationName === animationName || animationItem.id === animationName)
+      const animation = animationList.find(({ animationName: name, id }) => [name, id].includes(animationName))
       if (animation) {
         currentTime = animation.currentTime
       } else {
