@@ -1,6 +1,8 @@
 const { matchAnimationFrames } = require('../../src')
 
-describe.skip('web animations', () => {
+jest.useRealTimers()
+
+describe('web animations', () => {
   test('animation pulse looks as expected', async () => {
     // Animation that runs on page load
     const matchAnimationSuccess = await matchAnimationFrames({
@@ -8,7 +10,7 @@ describe.skip('web animations', () => {
       selector: '.wrapper',
       frameRate: 60,
       maxCaptureDuration: 3000,
-      frameDelay: 30,
+      frameDelay: 10,
       pageScreenshotDelay: 100,
       animationName: 'pulse-70524638'
     })

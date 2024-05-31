@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper">
+  <div class="wrapper" tabindex="0">
     <div class="pulsing-heart"></div>
   </div>
 </template>
@@ -15,9 +15,11 @@ export default {
 	position: absolute;
   margin-left: 50px;
   margin-top: 50px;
+  scale: 1;
+  transition: scale 1s linear;
 }
 
-.wrapper:hover {
+.wrapper:hover, .wrapper:focus {
   scale: 2;
 }
 

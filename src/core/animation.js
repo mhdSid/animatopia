@@ -1,11 +1,29 @@
 const { generateAnimationFrameTimeline, delay } = require('./frame')
 const { ANIMATION_TRIGGER_ERROR } = require('../constants/errorMessages')
-const { ANIMATION_TRIGGER_ACTIONS } = require('./interaction')
 
+/**
+ * Captures animation frames for visual regression testing.
+ * @param {Object} params - The parameters for capturing animation frames.
+ * @param {Object} params.page - The Puppeteer page instance.
+ * @param {Object} params.element - The element to capture animation frames from.
+ * @param {number} params.frameRate - The frame rate for capturing frames.
+ * @param {number} params.maxCaptureDuration - The maximum duration to capture frames.
+ * @param {number} params.frameDelay - The delay between frames.
+ * @param {number} params.pageScreenshotDelay - The delay before taking a screenshot.
+ * @param {string} params.baselineFolder - The folder to save baseline images.
+ * @param {Object} [params.cssTransitionData={}] - The CSS transition data.
+ * @param {string} params.animationName - The name of the animation.
+ * @param {boolean} params.isSvg - Whether the element is an SVG.
+ * @param {Object} [params.triggerInfo={}] - The trigger info for the animation.
+ * @param {string} [params.triggerInfo.triggerAction=null] - The action to trigger the animation.
+ * @param {string} [params.triggerInfo.triggerSelector=null] - The selector to trigger the animation.
+ * @returns {Promise<Object[]>} The list of captured frames with their image data and current time.
+ */
 async function captureAnimationFrames ({
   page,
   element,
   frameRate,
+  frameCount,
   maxCaptureDuration,
   frameDelay,
   pageScreenshotDelay,
@@ -13,33 +31,71 @@ async function captureAnimationFrames ({
   cssTransitionData = {},
   animationName,
   isSvg,
-  triggerInfo: { triggerAction, triggerSelector } = { triggerAction: null, triggerSelector: null }
+  triggerInfo: { triggerAction = null, triggerSelector = null } = {}
 }) {
-  const animationFrameTimelineList = await generateAnimationFrameTimeline({
-    baselineFolder,
-    animationName,
-    frameRate,
-    maxCaptureDuration,
-    frameDelay
-  })
-  const frameList = []
-  if (Object.keys(cssTransitionData).length) {
-    await playCssTransitionAsAnimation({ element, cssTransitionData, triggerAction, triggerSelector })
-  } else {
-    await playAnimation({ element, animationName, triggerAction, triggerSelector, isSvg })
+  try {
+    const animationFrameTimelineList = await generateAnimationFrameTimeline({
+      baselineFolder,
+      animationName,
+      frameRate,
+      frameCount,
+      maxCaptureDuration,
+      frameDelay
+    })
+
+    if (Object.keys(cssTransitionData).length > 0) {
+      await playCssTransitionAsAnimation({ element, animationName, cssTransitionData, triggerAction, triggerSelector })
+    } else {
+      await playAnimation({ element, animationName, triggerAction, triggerSelector, isSvg })
+    }
+
+    await pauseAnimation({ element, animationName, isSvg })
+    await setAnimationAtCurrentTime({ element, animationName, currentTime: 0.0, isSvg })
+
+    const frameList = await captureFrames({
+      page,
+      element,
+      animationFrameTimelineList,
+      pageScreenshotDelay,
+      animationName,
+      isSvg
+    })
+
+    return frameList
+  } catch (error) {
+    console.error('Error capturing animation frames:', error)
+    throw error
   }
-  await pauseAnimation({ element, animationName, isSvg })
-  await setAnimationAtCurrentTime({ element, animationName, currentTime: 0.0, isSvg })
-  for (let frameIndex = 0; frameIndex < animationFrameTimelineList.length; frameIndex++) {
-    const currentTime = animationFrameTimelineList[frameIndex]
+}
+
+/**
+ * Captures frames for each time point in the animation timeline.
+ * @param {Object} params - The parameters for capturing frames.
+ * @param {Object} params.page - The Puppeteer page instance.
+ * @param {Object} params.element - The element to capture animation frames from.
+ * @param {number[]} params.animationFrameTimelineList - The list of animation frame times.
+ * @param {number} params.pageScreenshotDelay - The delay before taking a screenshot.
+ * @param {string} params.animationName - The name of the animation.
+ * @param {boolean} params.isSvg - Whether the element is an SVG.
+ * @returns {Promise<Object[]>} The list of captured frames with their image data and current time.
+ */
+async function captureFrames ({
+  page,
+  element,
+  animationFrameTimelineList,
+  pageScreenshotDelay,
+  animationName,
+  isSvg
+}) {
+  const frameList = []
+
+  for (const currentTime of animationFrameTimelineList) {
     await setAnimationAtCurrentTime({ element, currentTime, animationName, isSvg })
     await delay(pageScreenshotDelay)
     const frameImageData = await page.screenshot()
-    frameList.push({
-      frameImageData,
-      frameCurrentTime: currentTime
-    })
+    frameList.push({ frameImageData, frameCurrentTime: currentTime })
   }
+
   return frameList
 }
 
@@ -52,149 +108,6 @@ async function playAnimation ({
 }) {
   const isPlaySuccess = await element.evaluate((element, animationName, triggerAction, triggerSelector, isSvg) => {
     return new Promise(async resolve => {
-      const ANIMATION_TRIGGER_ACTIONS = {
-        click: selector => {
-          const event = new window.MouseEvent('click', {
-            view: window,
-            bubbles: true,
-            cancelable: true
-          })
-          document.querySelector(selector).dispatchEvent(event)
-        },
-        dblclick: selector => {
-          const event = new window.MouseEvent('dblclick', {
-            view: window,
-            bubbles: true,
-            cancelable: true
-          })
-          document.querySelector(selector).dispatchEvent(event)
-        },
-        focus: selector => {
-          document.querySelector(selector).focus()
-        },
-        blur: selector => {
-          document.querySelector(selector).blur()
-        },
-        mousedown: selector => {
-          const event = new window.MouseEvent('mousedown', {
-            view: window,
-            bubbles: true,
-            cancelable: true
-          })
-          document.querySelector(selector).dispatchEvent(event)
-        },
-        mouseenter: selector => {
-          const event = new window.MouseEvent('mouseenter', {
-            view: window,
-            bubbles: true,
-            cancelable: true
-          })
-          document.querySelector(selector).dispatchEvent(event)
-        },
-        mousemove: selector => {
-          const event = new window.MouseEvent('mousemove', {
-            view: window,
-            bubbles: true,
-            cancelable: true
-          })
-          document.querySelector(selector).dispatchEvent(event)
-        },
-        mouseout: selector => {
-          const event = new window.MouseEvent('mouseout', {
-            view: window,
-            bubbles: true,
-            cancelable: true
-          })
-          document.querySelector(selector).dispatchEvent(event)
-        },
-        mouseover: selector => {
-          const event = new window.MouseEvent('mouseover', {
-            view: window,
-            bubbles: true,
-            cancelable: true
-          })
-          document.querySelector(selector).dispatchEvent(event)
-        },
-        mouseup: selector => {
-          const event = new window.MouseEvent('mouseup', {
-            view: window,
-            bubbles: true,
-            cancelable: true
-          })
-          document.querySelector(selector).dispatchEvent(event)
-        },
-        keydown: (selector, key) => {
-          const event = new window.KeyboardEvent('keydown')
-          document.querySelector(selector).dispatchEvent(event, { key })
-        },
-        keypress: (selector, key) => {
-          const event = new window.KeyboardEvent('keypress')
-          document.querySelector(selector).dispatchEvent(event, { key })
-        },
-        keyup: (selector, key) => {
-          const event = new window.KeyboardEvent('keyup')
-          document.querySelector(selector).dispatchEvent(event, { key })
-        },
-        mousewheel: selector => {
-          const event = new window.KeyboardEvent('wheel', {
-            deltaY: 1,
-            deltaMode: 1
-          })
-          document.querySelector(selector).dispatchEvent(event)
-        },
-        pointercancel: selector => {
-          const event = new window.PointerEvent('pointercancel')
-          document.querySelector(selector).dispatchEvent(event)
-        },
-        pointerup: selector => {
-          const event = new window.PointerEvent('pointerup')
-          document.querySelector(selector).dispatchEvent(event)
-        },
-        pointerover: selector => {
-          const event = new window.PointerEvent('pointerover')
-          document.querySelector(selector).dispatchEvent(event)
-        },
-        pointerout: selector => {
-          const event = new window.PointerEvent('pointerout')
-          document.querySelector(selector).dispatchEvent(event)
-        },
-        pointermove: selector => {
-          const event = new window.PointerEvent('pointermove')
-          document.querySelector(selector).dispatchEvent(event)
-        },
-        pointerleave: selector => {
-          const event = new window.PointerEvent('pointerleave')
-          document.querySelector(selector).dispatchEvent(event)
-        },
-        pointerenter: selector => {
-          const event = new window.PointerEvent('pointerenter')
-          document.querySelector(selector).dispatchEvent(event)
-        },
-        pointerdown: selector => {
-          const event = new window.PointerEvent('pointerdown')
-          document.querySelector(selector).dispatchEvent(event)
-        },
-        touchcancel: selector => {
-          const event = new window.Event('touchcancel')
-          document.querySelector(selector).dispatchEvent(event)
-        },
-        touchend: selector => {
-          const event = new window.Event('touchend')
-          document.querySelector(selector).dispatchEvent(event)
-        },
-        touchmove: selector => {
-          const event = new window.Event('touchmove')
-          document.querySelector(selector).dispatchEvent(event)
-        },
-        touchstart: selector => {
-          const event = new window.Event('touchstart')
-          document.querySelector(selector).dispatchEvent(event)
-        },
-        scroll: selector => {
-          document.querySelector(selector).scrollLeft = 100
-          document.querySelector(selector).scrollTop = 100
-        }
-      }
       const getAnimation = () => {
         const animationList = element.getAnimations()
         if (!animationList || !animationList.length) {
@@ -224,8 +137,8 @@ async function playAnimation ({
           }, 15)
         })
       }
-      if (triggerAction && triggerSelector && ANIMATION_TRIGGER_ACTIONS[triggerAction]) {
-        ANIMATION_TRIGGER_ACTIONS[triggerAction](triggerSelector)
+      if (triggerAction && triggerSelector && window.ANIMATION_TRIGGER_ACTIONS[triggerAction]) {
+        window.ANIMATION_TRIGGER_ACTIONS[triggerAction](triggerSelector)
       } else {
         if (isSvg) {
           element.setCurrentTime(0)
@@ -247,161 +160,18 @@ async function playAnimation ({
 
 async function playCssTransitionAsAnimation ({
   element,
+  animationName,
   cssTransitionData,
   triggerAction,
   triggerSelector
 }) {
-  const isPlaySuccess = await element.evaluate((element, animationData, triggerAction, triggerSelector) => {
+  const isPlaySuccess = await element.evaluate((element, animationData, triggerAction, triggerSelector, animationName) => {
     return new Promise(resolve => {
-      const ANIMATION_TRIGGER_ACTIONS = {
-        click: selector => {
-          const event = new window.MouseEvent('click', {
-            view: window,
-            bubbles: true,
-            cancelable: true
-          })
-          document.querySelector(selector).dispatchEvent(event)
-        },
-        dblclick: selector => {
-          const event = new window.MouseEvent('dblclick', {
-            view: window,
-            bubbles: true,
-            cancelable: true
-          })
-          document.querySelector(selector).dispatchEvent(event)
-        },
-        focus: selector => {
-          document.querySelector(selector).focus()
-        },
-        blur: selector => {
-          document.querySelector(selector).blur()
-        },
-        mousedown: selector => {
-          const event = new window.MouseEvent('mousedown', {
-            view: window,
-            bubbles: true,
-            cancelable: true
-          })
-          document.querySelector(selector).dispatchEvent(event)
-        },
-        mouseenter: selector => {
-          const event = new window.MouseEvent('mouseenter', {
-            view: window,
-            bubbles: true,
-            cancelable: true
-          })
-          document.querySelector(selector).dispatchEvent(event)
-        },
-        mousemove: selector => {
-          const event = new window.MouseEvent('mousemove', {
-            view: window,
-            bubbles: true,
-            cancelable: true
-          })
-          document.querySelector(selector).dispatchEvent(event)
-        },
-        mouseout: selector => {
-          const event = new window.MouseEvent('mouseout', {
-            view: window,
-            bubbles: true,
-            cancelable: true
-          })
-          document.querySelector(selector).dispatchEvent(event)
-        },
-        mouseover: selector => {
-          const event = new window.MouseEvent('mouseover', {
-            view: window,
-            bubbles: true,
-            cancelable: true
-          })
-          document.querySelector(selector).dispatchEvent(event)
-        },
-        mouseup: selector => {
-          const event = new window.MouseEvent('mouseup', {
-            view: window,
-            bubbles: true,
-            cancelable: true
-          })
-          document.querySelector(selector).dispatchEvent(event)
-        },
-        keydown: (selector, key) => {
-          const event = new window.KeyboardEvent('keydown')
-          document.querySelector(selector).dispatchEvent(event, { key })
-        },
-        keypress: (selector, key) => {
-          const event = new window.KeyboardEvent('keypress')
-          document.querySelector(selector).dispatchEvent(event, { key })
-        },
-        keyup: (selector, key) => {
-          const event = new window.KeyboardEvent('keyup')
-          document.querySelector(selector).dispatchEvent(event, { key })
-        },
-        mousewheel: selector => {
-          const event = new window.KeyboardEvent('wheel', {
-            deltaY: 1,
-            deltaMode: 1
-          })
-          document.querySelector(selector).dispatchEvent(event)
-        },
-        pointercancel: selector => {
-          const event = new window.PointerEvent('pointercancel')
-          document.querySelector(selector).dispatchEvent(event)
-        },
-        pointerup: selector => {
-          const event = new window.PointerEvent('pointerup')
-          document.querySelector(selector).dispatchEvent(event)
-        },
-        pointerover: selector => {
-          const event = new window.PointerEvent('pointerover')
-          document.querySelector(selector).dispatchEvent(event)
-        },
-        pointerout: selector => {
-          const event = new window.PointerEvent('pointerout')
-          document.querySelector(selector).dispatchEvent(event)
-        },
-        pointermove: selector => {
-          const event = new window.PointerEvent('pointermove')
-          document.querySelector(selector).dispatchEvent(event)
-        },
-        pointerleave: selector => {
-          const event = new window.PointerEvent('pointerleave')
-          document.querySelector(selector).dispatchEvent(event)
-        },
-        pointerenter: selector => {
-          const event = new window.PointerEvent('pointerenter')
-          document.querySelector(selector).dispatchEvent(event)
-        },
-        pointerdown: selector => {
-          const event = new window.PointerEvent('pointerdown')
-          document.querySelector(selector).dispatchEvent(event)
-        },
-        touchcancel: selector => {
-          const event = new window.Event('touchcancel')
-          document.querySelector(selector).dispatchEvent(event)
-        },
-        touchend: selector => {
-          const event = new window.Event('touchend')
-          document.querySelector(selector).dispatchEvent(event)
-        },
-        touchmove: selector => {
-          const event = new window.Event('touchmove')
-          document.querySelector(selector).dispatchEvent(event)
-        },
-        touchstart: selector => {
-          const event = new window.Event('touchstart')
-          document.querySelector(selector).dispatchEvent(event)
-        },
-        scroll: selector => {
-          document.querySelector(selector).scrollLeft = 100
-          document.querySelector(selector).scrollTop = 100
-        }
-      }
       const isNumeric = value => /^\d+$/.test(`${value}`)
-      const animationId = 'animatopia-animation'
       let animationRef = null
       const handlePlayAnimation = () => {
         animationRef = element.animate(animationData.keyframes, {
-          id: animationId,
+          id: animationName,
           duration: animationData.duration,
           delay: animationData.delay || 0,
           iterations: isNumeric(animationData.iterations) || animationData.iterations === Infinity ? animationData.iterations : 1,
@@ -409,9 +179,9 @@ async function playCssTransitionAsAnimation ({
           easing: animationData.easing || 'ease'
         })
       }
-      if (triggerAction) {
+      if (triggerAction && triggerSelector && window.ANIMATION_TRIGGER_ACTIONS[triggerAction]) {
         element.addEventListener(triggerAction, handlePlayAnimation)
-        ANIMATION_TRIGGER_ACTIONS[triggerAction](triggerSelector)
+        window.ANIMATION_TRIGGER_ACTIONS[triggerAction](triggerSelector)
       } else {
         handlePlayAnimation()
       }
@@ -420,7 +190,7 @@ async function playCssTransitionAsAnimation ({
         resolve(animationRef.playState === 'finished')
       }, animationData.duration + 100)
     })
-  }, cssTransitionData, triggerAction, triggerSelector)
+  }, cssTransitionData, triggerAction, triggerSelector, animationName)
   if (!isPlaySuccess) {
     throw new Error(ANIMATION_TRIGGER_ERROR({ triggerSelector, triggerAction }))
   }
@@ -440,7 +210,7 @@ async function pauseAnimation ({
         if (!animationList || !animationList.length) {
           resolve(false)
         }
-        const animation = animationList.find(animationItem => animationItem.animationName === animationName)
+        const animation = animationList.find(animationItem => animationItem.animationName === animationName || animationItem.id === animationName)
         if (animation) {
           animation.pause()
         } else {
@@ -467,7 +237,7 @@ async function setAnimationAtCurrentTime ({
         if (!animationList || !animationList.length) {
           resolve(false)
         }
-        const animation = animationList.find(animationItem => animationItem.animationName === animationName)
+        const animation = animationList.find(animationItem => animationItem.animationName === animationName || animationItem.id === animationName)
         if (animation) {
           animation.currentTime = currentTime
         } else {
@@ -494,7 +264,7 @@ async function cancelAnimation ({
           animationTiming
         })
       }
-      const animation = animationList.find(animationItem => animationItem.animationName === animationName)
+      const animation = animationList.find(animationItem => animationItem.animationName === animationName || animationItem.id === animationName)
       if (animation) {
         keyframes = animation.effect.getKeyframes()
         animationTiming = animation.effect.getComputedTiming()
@@ -520,7 +290,7 @@ async function getAnimationCurrentTime ({
       let currentTime = null
       const animationList = element.getAnimations()
       if (!animationList || !animationList.length) resolve(currentTime)
-      const animation = animationList.find(animationItem => animationItem.animationName === animationName)
+      const animation = animationList.find(animationItem => animationItem.animationName === animationName || animationItem.id === animationName)
       if (animation) {
         currentTime = animation.currentTime
       } else {

@@ -1,145 +1,124 @@
-module.exports = {
-  ANIMATION_TRIGGER_ACTIONS: {
-    click: selector => {
-      const event = new window.MouseEvent('click', {
-        view: window,
-        bubbles: true,
-        cancelable: true
-      })
-      document.querySelector(selector).dispatchEvent(event)
-    },
-    dblclick: selector => {
-      const event = new window.MouseEvent('dblclick', {
-        view: window,
-        bubbles: true,
-        cancelable: true
-      })
-      document.querySelector(selector).dispatchEvent(event)
-    },
-    focus: selector => {
-      document.querySelector(selector).focus()
-    },
-    blur: selector => {
-      document.querySelector(selector).blur()
-    },
-    mousedown: selector => {
-      const event = new window.MouseEvent('mousedown', {
-        view: window,
-        bubbles: true,
-        cancelable: true
-      })
-      document.querySelector(selector).dispatchEvent(event)
-    },
-    mouseenter: selector => {
-      const event = new window.MouseEvent('mouseenter', {
-        view: window,
-        bubbles: true,
-        cancelable: true
-      })
-      document.querySelector(selector).dispatchEvent(event)
-    },
-    mousemove: selector => {
-      const event = new window.MouseEvent('mousemove', {
-        view: window,
-        bubbles: true,
-        cancelable: true
-      })
-      document.querySelector(selector).dispatchEvent(event)
-    },
-    mouseout: selector => {
-      const event = new window.MouseEvent('mouseout', {
-        view: window,
-        bubbles: true,
-        cancelable: true
-      })
-      document.querySelector(selector).dispatchEvent(event)
-    },
-    mouseover: selector => {
-      const event = new window.MouseEvent('mouseover', {
-        view: window,
-        bubbles: true,
-        cancelable: true
-      })
-      document.querySelector(selector).dispatchEvent(event)
-    },
-    mouseup: selector => {
-      const event = new window.MouseEvent('mouseup', {
-        view: window,
-        bubbles: true,
-        cancelable: true
-      })
-      document.querySelector(selector).dispatchEvent(event)
-    },
-    keydown: (selector, key) => {
-      const event = new window.KeyboardEvent('keydown')
-      document.querySelector(selector).dispatchEvent(event, { key })
-    },
-    keypress: (selector, key) => {
-      const event = new window.KeyboardEvent('keypress')
-      document.querySelector(selector).dispatchEvent(event, { key })
-    },
-    keyup: (selector, key) => {
-      const event = new window.KeyboardEvent('keyup')
-      document.querySelector(selector).dispatchEvent(event, { key })
-    },
-    mousewheel: selector => {
-      const event = new window.KeyboardEvent('wheel', {
-        deltaY: 1,
-        deltaMode: 1
-      })
-      document.querySelector(selector).dispatchEvent(event)
-    },
-    pointercancel: selector => {
-      const event = new window.PointerEvent('pointercancel')
-      document.querySelector(selector).dispatchEvent(event)
-    },
-    pointerup: selector => {
-      const event = new window.PointerEvent('pointerup')
-      document.querySelector(selector).dispatchEvent(event)
-    },
-    pointerover: selector => {
-      const event = new window.PointerEvent('pointerover')
-      document.querySelector(selector).dispatchEvent(event)
-    },
-    pointerout: selector => {
-      const event = new window.PointerEvent('pointerout')
-      document.querySelector(selector).dispatchEvent(event)
-    },
-    pointermove: selector => {
-      const event = new window.PointerEvent('pointermove')
-      document.querySelector(selector).dispatchEvent(event)
-    },
-    pointerleave: selector => {
-      const event = new window.PointerEvent('pointerleave')
-      document.querySelector(selector).dispatchEvent(event)
-    },
-    pointerenter: selector => {
-      const event = new window.PointerEvent('pointerenter')
-      document.querySelector(selector).dispatchEvent(event)
-    },
-    pointerdown: selector => {
-      const event = new window.PointerEvent('pointerdown')
-      document.querySelector(selector).dispatchEvent(event)
-    },
-    touchcancel: selector => {
-      const event = new window.Event('touchcancel')
-      document.querySelector(selector).dispatchEvent(event)
-    },
-    touchend: selector => {
-      const event = new window.Event('touchend')
-      document.querySelector(selector).dispatchEvent(event)
-    },
-    touchmove: selector => {
-      const event = new window.Event('touchmove')
-      document.querySelector(selector).dispatchEvent(event)
-    },
-    touchstart: selector => {
-      const event = new window.Event('touchstart')
-      document.querySelector(selector).dispatchEvent(event)
-    },
-    scroll: selector => {
-      document.querySelector(selector).scrollLeft = 100
-      document.querySelector(selector).scrollTop = 100
+async function attachUIInteractionEvents (page) {
+  if (!page) throw new Error('A page must be passed to attach UI interaction events')
+
+  await page.evaluateOnNewDocument(() => {
+    const createMouseEvent = type => new window.MouseEvent(type, {
+      view: window,
+      bubbles: true,
+      cancelable: true
+    })
+
+    const createKeyboardEvent = (type, key) => new window.KeyboardEvent(type, {
+      key,
+      bubbles: true,
+      cancelable: true
+    })
+
+    const createPointerEvent = type => new window.PointerEvent(type, {
+      view: window,
+      bubbles: true,
+      cancelable: true
+    })
+
+    const createEvent = type => new window.Event(type, {
+      bubbles: true,
+      cancelable: true
+    })
+
+    window.ANIMATION_TRIGGER_ACTIONS = {
+      click: selector => {
+        document.querySelector(selector).dispatchEvent(createMouseEvent('click'))
+      },
+      dblclick: selector => {
+        document.querySelector(selector).dispatchEvent(createMouseEvent('dblclick'))
+      },
+      focus: selector => {
+        document.querySelector(selector).focus()
+      },
+      blur: selector => {
+        document.querySelector(selector).blur()
+      },
+      mousedown: selector => {
+        document.querySelector(selector).dispatchEvent(createMouseEvent('mousedown'))
+      },
+      mouseenter: selector => {
+        document.querySelector(selector).dispatchEvent(createMouseEvent('mouseenter'))
+      },
+      mousemove: selector => {
+        document.querySelector(selector).dispatchEvent(createMouseEvent('mousemove'))
+      },
+      mouseout: selector => {
+        document.querySelector(selector).dispatchEvent(createMouseEvent('mouseout'))
+      },
+      mouseover: selector => {
+        document.querySelector(selector).dispatchEvent(createMouseEvent('mouseover'))
+      },
+      mouseup: selector => {
+        document.querySelector(selector).dispatchEvent(createMouseEvent('mouseup'))
+      },
+      keydown: (selector, key) => {
+        document.querySelector(selector).dispatchEvent(createKeyboardEvent('keydown', key))
+      },
+      keypress: (selector, key) => {
+        document.querySelector(selector).dispatchEvent(createKeyboardEvent('keypress', key))
+      },
+      keyup: (selector, key) => {
+        document.querySelector(selector).dispatchEvent(createKeyboardEvent('keyup', key))
+      },
+      mousewheel: selector => {
+        const event = new window.WheelEvent('wheel', {
+          deltaY: 1,
+          deltaMode: 1,
+          bubbles: true,
+          cancelable: true
+        })
+        document.querySelector(selector).dispatchEvent(event)
+      },
+      pointercancel: selector => {
+        document.querySelector(selector).dispatchEvent(createPointerEvent('pointercancel'))
+      },
+      pointerup: selector => {
+        document.querySelector(selector).dispatchEvent(createPointerEvent('pointerup'))
+      },
+      pointerover: selector => {
+        document.querySelector(selector).dispatchEvent(createPointerEvent('pointerover'))
+      },
+      pointerout: selector => {
+        document.querySelector(selector).dispatchEvent(createPointerEvent('pointerout'))
+      },
+      pointermove: selector => {
+        document.querySelector(selector).dispatchEvent(createPointerEvent('pointermove'))
+      },
+      pointerleave: selector => {
+        document.querySelector(selector).dispatchEvent(createPointerEvent('pointerleave'))
+      },
+      pointerenter: selector => {
+        document.querySelector(selector).dispatchEvent(createPointerEvent('pointerenter'))
+      },
+      pointerdown: selector => {
+        document.querySelector(selector).dispatchEvent(createPointerEvent('pointerdown'))
+      },
+      touchcancel: selector => {
+        document.querySelector(selector).dispatchEvent(createEvent('touchcancel'))
+      },
+      touchend: selector => {
+        document.querySelector(selector).dispatchEvent(createEvent('touchend'))
+      },
+      touchmove: selector => {
+        document.querySelector(selector).dispatchEvent(createEvent('touchmove'))
+      },
+      touchstart: selector => {
+        document.querySelector(selector).dispatchEvent(createEvent('touchstart'))
+      },
+      scroll: selector => {
+        const element = document.querySelector(selector)
+        element.scrollLeft = 100
+        element.scrollTop = 100
+      }
     }
-  }
+  })
+}
+
+module.exports = {
+  attachUIInteractionEvents
 }

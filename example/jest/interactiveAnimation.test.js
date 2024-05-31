@@ -1,6 +1,6 @@
 const { matchAnimationFrames } = require('../../src')
 
-describe.skip('web animations', () => {
+describe('web animations', () => {
   test('interactive animation looks as expected', async () => {
 		// Animation that is triggered on user interaction
 		const matchAnimationSuccess = await matchAnimationFrames({

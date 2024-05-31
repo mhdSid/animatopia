@@ -9,7 +9,7 @@ describe('web animations', () => {
 			selector: '.wrapper',
 			frameRate: 60,
 			maxCaptureDuration: 3000,
-			frameDelay: 20,
+			frameDelay: 30,
 			pageScreenshotDelay: 100,
 			animationName: 'myCssAnimation',
 			cssTransitionData: {

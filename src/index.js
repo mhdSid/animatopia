@@ -1,6 +1,7 @@
 const { isNumeric } = require('./util/number/isNumeric')
 const { captureAnimationFrames } = require('./core/animation')
 const { launchPuppeteer, openNewPage } = require('./core/puppeteer')
+const { attachUIInteractionEvents } = require('./core/interaction')
 const { matchFrames } = require('./core/frame')
 const { INTERACTION_EVENT_MAP } = require('./constants/interactionEvents')
 const { UNKNOWN_TRIGGER_ACTION_ERROR, NO_URL_ERROR, NO_SELECTOR_ERROR, NO_ANIMATION_ERROR } = require('./constants/errorMessages')
@@ -57,6 +58,7 @@ async function matchAnimationFrames ({
   selector,
   frameRate,
   frameDelay,
+  frameCount,
   pageScreenshotDelay,
   maxCaptureDuration,
   animationName,
@@ -99,6 +101,8 @@ async function matchAnimationFrames ({
       browser,
       url
     })
+    await attachUIInteractionEvents(page)
+    await page.goto(url)
     await page.waitForSelector(selector)
     const element = await page.$(selector)
     const frameList = await captureAnimationFrames({
@@ -108,6 +112,7 @@ async function matchAnimationFrames ({
       cssTransitionData,
       triggerInfo,
       frameRate: _frameRate,
+      frameCount,
       maxCaptureDuration: _maxCaptureDuration,
       frameDelay: _frameDelay,
       pageScreenshotDelay: _pageScreenshotDelay,
@@ -129,8 +134,8 @@ async function matchAnimationFrames ({
     console.error('Error occurred during animation capture:', error)
   } finally {
     await browser.close()
-    return matchSuccess
   }
+  return matchSuccess
 }
 
 module.exports = {

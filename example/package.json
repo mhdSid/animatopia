@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "test": "jest"
+    "test": "node ./node_modules/.bin/jest --runInBand --detectOpenHandles"
   },
   "devDependencies": {
     "jest": "^29.7.0",

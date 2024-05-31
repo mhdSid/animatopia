@@ -1,6 +1,6 @@
 const { matchAnimationFrames } = require('../../src')
 
-describe.skip('web animations', () => {
+describe('web animations', () => {
   test('<svg> animation looks as expected', async () => {
 		// <SVG> Animation that runs on page load
 		const matchAnimationSuccess = await matchAnimationFrames({

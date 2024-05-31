@@ -10,6 +10,7 @@ async function launchPuppeteer () {
       '--disable-raf-throttling'
     ]
   })
+
   return browser
 }
 

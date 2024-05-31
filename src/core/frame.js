@@ -1,3 +1,5 @@
+const { DEFAULT_FRAME_RATE, DEFAULT_FRAME_DELAY, DEFAULT_FRAME_COUNT } = require('../constants/defaults')
+const { isNumeric } = require('../util/number/isNumeric')
 const { Timer } = require('../util/time/timer')
 const { matchImageSnapshot, getBaselineFileList } = require('./snapshot')
 
@@ -17,20 +19,31 @@ function delay (frameDelay) {
   })
 }
 
-const generateFrameTimeline = async ({
-  frameRate,
-  maxCaptureDuration,
-  frameDelay
-}) => {
+async function generateFrameTimeline ({
+  frameRate = DEFAULT_FRAME_RATE,
+  maxCaptureDuration = DEFAULT_MAX_CAPTURE_DURATION,
+  frameDelay = DEFAULT_PAGE_SCREENSHOT_DELAY,
+  frameCount = DEFAULT_FRAME_COUNT
+}) {
   const frameTimelineList = []
   const timer = new Timer()
   let elapsedTime = 0
   timer.start()
-  while (elapsedTime <= maxCaptureDuration) {
-    frameTimelineList.push(Math.floor(elapsedTime))
-    await requestAnimationFrame(frameRate)
-    elapsedTime = timer.getTimeElapsed()
-    await delay(frameDelay)
+
+  if (isNumeric(frameCount)) {
+    for (let i = 0; i < frameCount; i++) {
+      frameTimelineList.push(Math.floor(elapsedTime))
+      await requestAnimationFrame(frameRate)
+      elapsedTime = timer.getTimeElapsed()
+      await delay(frameDelay)
+    }
+  } else {
+    while (elapsedTime <= maxCaptureDuration) {
+      frameTimelineList.push(Math.floor(elapsedTime))
+      await requestAnimationFrame(frameRate)
+      elapsedTime = timer.getTimeElapsed()
+      await delay(frameDelay)
+    }
   }
   return frameTimelineList
 }
@@ -39,6 +52,7 @@ async function generateAnimationFrameTimeline ({
   baselineFolder,
   animationName,
   frameRate,
+  frameCount,
   maxCaptureDuration,
   frameDelay
 }) {
@@ -50,6 +64,7 @@ async function generateAnimationFrameTimeline ({
   } else {
     animationFrameTimelineList = await generateFrameTimeline({
       frameRate,
+      frameCount,
       maxCaptureDuration,
       frameDelay
     })
